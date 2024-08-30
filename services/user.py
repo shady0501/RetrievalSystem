@@ -2,164 +2,82 @@ from models.user import User
 from flask import jsonify
 from config import db_init as db
 
-# 用户登录功能
-def user_login(email,password):
-    u = User.query.filter_by(email=email).first()
-    if u is None:
-        # 用户不存在
-        return jsonify({
-            'code': -1,
-            "message": "用户不存在",
-            "data": ""
-        })
-    u_dict = u.to_dict()
-    if u_dict['password'] != password:
-        # 用户存在 密码错误
-        return jsonify({
-            'code': -2,
-            "message": "密码错误请重试",
-            "data":""
-        })
-    return jsonify({
-            'code': 0,
-            "message": "登录成功",
-            "data": u_dict
-        })
-
-# 用户注册功能
-def user_register(email,username,password):
+def user_login(username, password):
     u = User.query.filter_by(username=username).first()
-    if u is not None:
-        # 用户名已存在
-        return jsonify({
-            'code': -1,
-            "message": "用户已存在",
-            "data": ""
-        })
-    e = User.query.filter_by(email=email).first()
-    if e is not None:
-        # 邮箱已存在
-        return jsonify({
-            'code': -2,
-            "message": "邮箱已存在",
-            "data":""
-        })
+    if not u:
+        return jsonify({'code': -1, "message": "User does not exist", "data": None})
 
+    # 直接与数据库中的密码进行比对
+    if u.password != password:
+        return jsonify({'code': -2, "message": "Incorrect password, please try again", "data": None})
+
+    u_dict = u.to_dict()
+    return jsonify({'code': 0, "message": "Login successful", "data": u_dict})
+
+def user_register(email, username, password):
+    if User.query.filter_by(username=username).first():
+        return jsonify({'code': -1, "message": "User already exists", "data": None})
+
+    if User.query.filter_by(email=email).first():
+        return jsonify({'code': -2, "message": "Email already exists", "data": None})
+
+    # 直接使用用户提供的密码
     new_user = User(email=email, username=username, password=password)
-    u_dict = new_user.to_dict()
+
     try:
         db.session.add(new_user)
-        db.session.commit()  # 提交事务，将数据写入数据库
-        return jsonify({
-            'code': 0,
-            "message": "用户注册成功",
-            "data": u_dict
-        })
+        db.session.commit()
+        return jsonify({'code': 0, "message": "User registered successfully", "data": new_user.to_dict()})
     except Exception as e:
-        db.session.rollback()  # 出现异常时回滚事务
-        print("用户注册数据库插入失败：" + str(e))
-        return jsonify({
-            'code': -3,
-            "message": "用户注册失败，请重试",
-            "data": ""
-        })
+        db.session.rollback()
+        print(f"Failed to insert user registration into database: {e}")
+        return jsonify({'code': -3, "message": "User registration failed, please try again", "data": None})
 
-
-# 用户个人信息编辑功能
 def user_edit(email, username, password, avatar, nickname):
     u = User.query.filter_by(username=username).first()
-    if u is None:
-        # 用户不存在
-        return jsonify({
-            'code': -1,
-            "message": "用户不存在",
-            "data": ""
-        })
-    if (email and u.email != email) and \
-            (password and u.password != password) and \
-            (avatar and u.avatar != avatar) and \
-            (nickname and u.nickname != nickname):
-        # 用户未修改信息
-        return jsonify({
-            'code': -100,
-            "message": "用户未修改信息",
-            "data": ""
-        })
-    # 检查需要更新的字段
-    if email:
+    if not u:
+        return jsonify({'code': -1, "message": "User does not exist", "data": None})
+
+    updated = False
+    if email and u.email != email:
         u.email = email
-    if password:
+        updated = True
+    # 直接更新密码
+    if password and u.password != password:
         u.password = password
-    if avatar:
+        updated = True
+    if avatar and u.avatar != avatar:
         u.avatar = avatar
-    if nickname:
+        updated = True
+    if nickname and u.nickname != nickname:
         u.nickname = nickname
+        updated = True
+
+    if not updated:
+        return jsonify({'code': -100, "message": "No user information modified", "data": None})
 
     try:
-        # 提交更改到数据库
         db.session.commit()
-        return jsonify({
-            'code': 0,
-            "message": "个人信息修改成功",
-            "data": ""
-        })
+        return jsonify({'code': 0, "message": "User information successfully updated", "data": None})
     except Exception as e:
-        # 处理数据库提交错误
         db.session.rollback()
-        print("用户个人信息编辑数据库插入失败：" + str(e))
-        return jsonify({
-            'code': -3,
-            "message": "更新失败",
-            "data": ""
-        })
+        print(f"Failed to update user information in the database: {e}")
+        return jsonify({'code': -3, "message": "Update failed", "data": None})
 
-# 用户删除功能
-def user_delete(username,password):
+def user_delete(username, password):
     u = User.query.filter_by(username=username).first()
-    if u is None:
-        # 用户不存在
-        return jsonify({
-            'code': -1,
-            "message": "用户不存在",
-            "data": ""
-        })
-    u_dict = u.to_dict()
-    if u_dict['password'] != password:
-        # 用户存在 密码错误
-        return jsonify({
-            'code': -2,
-            "message": "密码错误请重试",
-            "data":""
-        })
+    if not u:
+        return jsonify({'code': -1, "message": "User does not exist", "data": None})
+
+    # 直接与数据库中的密码进行比对
+    if u.password != password:
+        return jsonify({'code': -2, "message": "Incorrect password, please try again", "data": None})
 
     u.delete_flag = 1
-
     try:
-        # 提交更改到数据库
         db.session.commit()
-        return jsonify({
-            'code': 0,
-            "message": "用户删除成功",
-            "data": ""
-        })
+        return jsonify({'code': 0, "message": "User successfully deleted", "data": None})
     except Exception as e:
-        # 处理数据库提交错误
         db.session.rollback()
-        print("用户删除数据库更新失败：" + str(e))
-        return jsonify({
-            'code': -3,
-            "message": "用户删除失败",
-            "data": ""
-        })
-
-
-
-# def user_reg():
-#         return jsonify({
-#             'code': 200,
-#             "message": "用户存在",
-#             "data": ""
-#         })
-
-
-
+        print(f"Failed to delete user in the database: {e}")
+        return jsonify({'code': -3, "message": "User deletion failed", "data": None})

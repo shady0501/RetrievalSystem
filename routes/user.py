@@ -1,69 +1,64 @@
-from flask import Blueprint, request
-from services.user import user_login
-from services.user import user_register
-from services.user import user_edit
-from services.user import user_delete
-import json
+from flask import Blueprint, request, jsonify
+from services.user import user_login, user_register, user_edit, user_delete
+
 user = Blueprint('user', __name__)
 
-# 用户登录功能
-@user.route('login', methods=['POST'])
+@user.route('/login', methods=['POST'])
 def login():
     data = request.form
-    print(request.form)
-    # data = json.loads(request.data)
-    # print(request.data)
-    # print(request.args)
-    email = data['email']
-    password = data['password']
+    if not data:
+        return jsonify({'code': -4, 'message': 'Invalid input', 'data': None})
 
-    # print(email,password)
-    data = user_login(email, password)
-    return data
-    # return 'ok'
+    username = data.get('username')
+    password = data.get('password')
 
-# 用户注册功能
-@user.route('register', methods=['POST'])
+    if not username or not password:
+        return jsonify({'code': -4, 'message': 'Username and password are required', 'data': None})
+
+    return user_login(username, password)
+
+@user.route('/register', methods=['POST'])
 def register():
     data = request.form
-    print(request.form)
-    email = data['email']
-    username = data['username']
-    password = data['password']
+    if not data:
+        return jsonify({'code': -4, 'message': 'Invalid input', 'data': None})
 
-    # print(email,password)
-    data = user_register(email, username, password)
-    return data
+    email = data.get('email')
+    username = data.get('username')
+    password = data.get('password')
 
-# 用户个人信息编辑功能
-@user.route('edit', methods=['PUT'])
+    if not email or not username or not password:
+        return jsonify({'code': -4, 'message': 'All fields are required', 'data': None})
+
+    return user_register(email, username, password)
+
+@user.route('/edit', methods=['PUT'])
 def edit():
     data = request.form
-    print(request.form)
-    username = data['username']
+    if not data:
+        return jsonify({'code': -4, 'message': 'Invalid input', 'data': None})
+
+    username = data.get('username')
     email = data.get('email')
     password = data.get('password')
     avatar = data.get('avatar')
     nickname = data.get('nickname')
 
-    # print(email,password)
-    data = (user_edit(email, username, password, avatar, nickname))
-    return data
+    if not username:
+        return jsonify({'code': -4, 'message': 'Username is required', 'data': None})
 
-# 用户删除功能
-@user.route('delete', methods=['DELETE'])
+    return user_edit(email, username, password, avatar, nickname)
+
+@user.route('/delete', methods=['DELETE'])
 def delete():
     data = request.form
-    print(request.form)
-    username = data['username']
-    password = data['password']
-    data = (user_delete(username, password))
-    return data
+    if not data:
+        return jsonify({'code': -4, 'message': 'Invalid input', 'data': None})
 
+    username = data.get('username')
+    password = data.get('password')
 
+    if not username or not password:
+        return jsonify({'code': -4, 'message': 'Username and password are required', 'data': None})
 
-# @user.route('reg', methods=['GET'])
-# def reg():
-#     data = user_reg()
-#     print(data)
-#     return data
+    return user_delete(username, password)
