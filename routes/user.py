@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.user import user_login, user_register, user_edit, user_delete, user_charge
 from services.feedback_suggestion import feedback_submission
+from file_upload import handle_file_upload
 
 # 创建用户蓝图，用于处理与用户相关的路由
 user = Blueprint('user', __name__)
@@ -67,10 +68,16 @@ def edit():
             'data': None
         })
 
+    upload_folder = 'D:/code/RetrievalSystemBackend/avatar/'
+    response = handle_file_upload(upload_folder)
+    response_data = response.get_json()
+    if response_data['code'] == 0:
+        avatar = response_data['data']['file_path']
+    else:
+        avatar = None
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    avatar = data.get('avatar')
     nickname = data.get('nickname')
 
     # 用户名是必填字段
@@ -142,7 +149,7 @@ def feedback():
     if not data:
         return jsonify({
             'code': -4,
-            'message': 'Invalid input',
+            'message': '无效输入',
             'data': None
         })
 
@@ -152,7 +159,7 @@ def feedback():
     if not username or not content:
         return jsonify({
             'code': -4,
-            'message': 'All fields are required',
+            'message': '用户名和内容是必填项',
             'data': None
         })
     return feedback_submission(username,content)
