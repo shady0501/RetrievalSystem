@@ -1,12 +1,11 @@
-from config import db_init as db
+from config import app,db_init as db
+
+# 使用应用上下文反射数据库
+with app.app_context():
+    db.metadata.reflect(bind=db.engine)
 
 class PersonalizedInterfaceSetting(db.Model):
-    __tablename__ = 'personalizedinterfacesetting'  # 指定表名
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='主键ID')
-    user_id = db.Column(db.Integer, nullable=False, comment='用户ID')
-    theme = db.Column(db.String(255), nullable=True, comment='主题')
-    font_style = db.Column(db.String(255), nullable=True, comment='字体样式')
-    background_image = db.Column(db.String(255), nullable=True, comment='背景图片')
+    __table__ = db.metadata.tables['personalizedinterfacesetting']  # 使用反射的表
 
     def to_dict(self):
         return {
