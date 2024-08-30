@@ -3,8 +3,8 @@ from flask import jsonify
 from config import db_init as db
 
 # 用户登录功能
-def user_login(email,password):
-    u = User.query.filter_by(email=email).first()
+def user_login(username,password):
+    u = User.query.filter_by(username=username).first()
     if u is None:
         # 用户不存在
         return jsonify({
@@ -75,10 +75,17 @@ def user_edit(email, username, password, avatar, nickname):
             "message": "用户不存在",
             "data": ""
         })
-    if (email and u.email != email) and \
-            (password and u.password != password) and \
-            (avatar and u.avatar != avatar) and \
-            (nickname and u.nickname != nickname):
+
+    # 获取传入的值
+    data = {
+        'email': email,
+        'password': password,
+        'avatar': avatar,
+        'nickname': nickname
+    }
+
+    # 检查是否有任何非空值与当前用户信息不一致
+    if not any(value is not None and getattr(u, key) != value for key, value in data.items()):
         # 用户未修改信息
         return jsonify({
             'code': -100,

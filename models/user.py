@@ -26,5 +26,6 @@ class User(db.Model):
             'permission_level': self.permission_level,
             'balance': float(self.balance),  # DECIMAL 类型转换为 float
             'search_condition_id': self.search_condition_id,
-            'filter_condition_id': self.filter_condition_id
+            'filter_condition_id': self.filter_condition_id,
+            'delete_flag': self.delete_flag
         }

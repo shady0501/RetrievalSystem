@@ -14,11 +14,11 @@ def login():
     # data = json.loads(request.data)
     # print(request.data)
     # print(request.args)
-    email = data['email']
+    username = data['username']
     password = data['password']
 
     # print(email,password)
-    data = user_login(email, password)
+    data = user_login(username, password)
     return data
     # return 'ok'
 
