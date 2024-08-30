@@ -8,4 +8,5 @@ app.register_blueprint(user, url_prefix="/user")
 CORS(app)
 
 if __name__ == '__main__':
+    # hzh
     app.run()
