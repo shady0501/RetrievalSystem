@@ -4,7 +4,7 @@ from routes.search import search
 from config import app
 from flask_cors import CORS
 from routes.faq import faq
-from routes.amdin import admin
+from routes.admin import admin
 
 # 确保在注册蓝图前加载所有模型
 with app.app_context():
