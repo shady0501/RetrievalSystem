@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="管理员重置密码，删除用户，用户常见问题，图文检索">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="admin名称修改">
+      <change afterPath="$PROJECT_DIR$/routes/search_history.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/search_history.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/amdin.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/search_history.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/search_history.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/user.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +49,12 @@
     &quot;assignee&quot;: &quot;shady0501&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:xvolare/RetrievalSystem01.git",
-    "accountId": "b55879a7-98c7-460d-b0f6-2ab3edfa8724"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:xvolare/RetrievalSystem01.git&quot;,
+    &quot;accountId&quot;: &quot;b55879a7-98c7-460d-b0f6-2ab3edfa8724&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
@@ -59,27 +65,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flask 服务器.RetrievalSystemBackend.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/SEU/summer/RetrievalSystem01",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flask 服务器.RetrievalSystemBackend.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/SEU/summer/RetrievalSystem01&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql_aurora",
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora&quot;,
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="RetrievalSystemBackend" type="Python.FlaskServer">
       <option name="additionalOptions" value="--host=0.0.0.0 --port=8000" />
@@ -118,7 +124,8 @@
       <updated>1724921092583</updated>
       <workItem from="1724921101524" duration="139000" />
       <workItem from="1724921246084" duration="15257000" />
-      <workItem from="1724987077114" duration="15244000" />
+      <workItem from="1724987077114" duration="15765000" />
+      <workItem from="1725237747871" duration="16873000" />
     </task>
     <task id="LOCAL-00001" summary="用户增删改功能">
       <option name="closed" value="true" />
@@ -168,7 +175,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725009510495</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="admin名称修改">
+      <option name="closed" value="true" />
+      <created>1725009957785</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1725009957785</updated>
+    </task>
+    <task id="LOCAL-00008" summary="admin名称修改">
+      <option name="closed" value="true" />
+      <created>1725010023431</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1725010023431</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,10 +213,11 @@
     <MESSAGE value="数据库反射" />
     <MESSAGE value="json 格式+适当注释" />
     <MESSAGE value="管理员重置密码，删除用户，用户常见问题，图文检索" />
-    <option name="LAST_COMMIT_MESSAGE" value="管理员重置密码，删除用户，用户常见问题，图文检索" />
+    <MESSAGE value="admin名称修改" />
+    <option name="LAST_COMMIT_MESSAGE" value="admin名称修改" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1724986284924" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/RetrievalSystem01$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1725002265148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/RetrievalSystem01$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1725260370574" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
