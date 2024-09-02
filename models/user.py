@@ -1,4 +1,5 @@
 from config import app, db_init as db  # 导入Flask应用实例和数据库对象
+from flask_login import UserMixin
 
 # 使用应用上下文反射数据库
 # 在Flask应用上下文中反射数据库结构，加载所有表的元数据
@@ -6,7 +7,7 @@ with app.app_context():
     db.metadata.reflect(bind=db.engine)  # 反射数据库元数据到SQLAlchemy的metadata对象中
 
 # 定义用户模型类
-class User(db.Model):
+class User(db.Model,UserMixin):
     # 使用反射的表来定义模型，这里直接从反射的metadata中获取表定义
     __table__ = db.metadata.tables['user']
 
