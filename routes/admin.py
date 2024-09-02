@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.admin import admin_reset_password, admin_delete_user
+from services.admin import admin_reset_password, admin_delete_user, admin_get_user_info
 
 # 创建管理员蓝图，用于处理与管理员相关的路由
 admin = Blueprint('admin', __name__)
@@ -52,3 +52,9 @@ def delete_user():
 
     # 调用管理员注销用户账号服务
     return admin_delete_user(username)
+
+# 管理员获取用户数据路由
+@admin.route('/get_user_info', methods=['GET'])
+def get_user_info():
+    # 调用管理员获取用户数据服务
+    return admin_get_user_info()

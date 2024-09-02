@@ -47,3 +47,17 @@ def feedback_submission(username,content):
             "data": ""
         })
 
+# 用户获得反馈记录功能
+def feedback_history(username):
+    u = User.query.filter_by(username=username).first()
+
+    # 获取用户的所有反馈记录
+    feedback_list = Feedback.query.filter_by(user_id=u.id).all()
+
+    # 将反馈记录转换为字典列表
+    feedback_data = [feedback.to_dict() for feedback in feedback_list]
+    return jsonify({
+        'code': 0,
+        "message": "用户反馈历史记录显示成功",
+        "data": feedback_data
+    })

@@ -33,12 +33,12 @@ def user_login(username, password):
     })
 
 # 用户注册函数
-def user_register(email, username, password):
+def user_register(email, username, nickname, password):
     # 检查用户名是否已存在
     if User.query.filter_by(username=username, delete_flag=0).first():
         return jsonify({
             'code': -1,
-            'message': '用户已存在',
+            'message': '该用户名已存在',
             'data': None
         })
 
@@ -51,7 +51,7 @@ def user_register(email, username, password):
         })
 
     # 创建新的用户对象
-    new_user = User(email=email, username=username, password=password)
+    new_user = User(email=email, username=username, nickname = nickname, password=password,delete_flag=0)
 
     try:
         db.session.add(new_user)  # 添加新用户到数据库会话
@@ -63,7 +63,7 @@ def user_register(email, username, password):
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"用户注册失败，插入数据库失败：{e}")
+        print(f"用户注册失败，插入数据库失败：{e}, new_user: {new_user.__dict__}")
         return jsonify({
             'code': -3,
             'message': '用户注册失败，请重试',
@@ -71,7 +71,7 @@ def user_register(email, username, password):
         })
 
 # 用户信息编辑函数
-def user_edit(email, username, password, avatar, nickname):
+def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -95,6 +95,15 @@ def user_edit(email, username, password, avatar, nickname):
         updated = True
     if nickname and u.nickname != nickname:
         u.nickname = nickname
+        updated = True
+    if sex and u.sex != sex:
+        u.sex = sex
+        updated = True
+    if birthday and u.birthday != birthday:
+        u.birthday = birthday
+        updated = True
+    if description and u.description != description:
+        u.description = description
         updated = True
 
     # 如果没有更新任何字段，返回未修改信息提示
