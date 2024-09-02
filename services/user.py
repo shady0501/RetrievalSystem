@@ -1,3 +1,4 @@
+from file_download import generate_image, send_image
 from models.user import User
 from flask import jsonify
 from config import db_init as db
@@ -198,3 +199,15 @@ def user_charge(username, balance):
             'message': '余额更新失败',
             'data': None
         })
+
+# 用户下载图片函数
+def user_download_picture(filename, format, resolution):
+    # 从请求中获取参数
+    base_image_path = 'D:/code/RetrievalSystemBackend/return_image/'
+    temp_image_path = 'D:/code/RetrievalSystemBackend/return_image/'
+
+    # 调用生成图片的函数
+    new_filename, new_filepath = generate_image(filename, format, resolution, base_image_path, temp_image_path)
+
+    # 使用发送图片的函数
+    return send_image(new_filepath, new_filename)
