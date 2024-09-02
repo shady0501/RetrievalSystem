@@ -18,11 +18,11 @@ def login():
             'data': None
         })
 
-    email = data.get('email')
+    username = data.get('username')
     password = data.get('password')
 
     # 检查必填字段
-    if not email or not password:
+    if not username or not password:
         return jsonify({
             'code': -4,
             'message': '用户名和密码为必填项',
@@ -30,7 +30,7 @@ def login():
         })
 
     # 调用用户登录服务
-    return user_login(email, password)
+    return user_login(username, password)
 
 # 注册路由
 @user.route('/register', methods=['POST'])
