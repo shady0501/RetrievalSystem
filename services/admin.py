@@ -14,14 +14,15 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
             'data': None
         })
 
-    try:
-        datetime.strptime(birthday, '%Y-%m-%d')
-    except ValueError:
-        return jsonify({
-            'code': -3,
-            'message': '用户生日格式非法',
-            'data': None
-        })
+    if birthday:
+        try:
+            datetime.strptime(birthday, '%Y-%m-%d')
+        except ValueError:
+            return jsonify({
+                'code': -3,
+                'message': '用户生日格式非法',
+                'data': None
+            })
 
     updated = False  # 标记是否有字段更新
 
