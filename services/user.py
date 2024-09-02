@@ -1,3 +1,5 @@
+from flask_login import login_user
+
 from file_download import generate_image, send_image
 from models.user import User
 from flask import jsonify
@@ -6,7 +8,7 @@ from config import db_init as db
 # 用户登录函数
 def user_login(username, password):
     # 查询用户是否存在
-    u = User.query.filter_by(username=username).first()
+    u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
@@ -23,6 +25,7 @@ def user_login(username, password):
         })
 
     u_dict = u.to_dict()  # 将用户对象转换为字典
+    login_user(u)
     return jsonify({
         'code': 0,
         'message': '登录成功',
@@ -32,7 +35,7 @@ def user_login(username, password):
 # 用户注册函数
 def user_register(email, username, password):
     # 检查用户名是否已存在
-    if User.query.filter_by(username=username).first():
+    if User.query.filter_by(username=username, delete_flag=0).first():
         return jsonify({
             'code': -1,
             'message': '用户已存在',
@@ -40,7 +43,7 @@ def user_register(email, username, password):
         })
 
     # 检查电子邮件是否已存在
-    if User.query.filter_by(email=email).first():
+    if User.query.filter_by(email=email, delete_flag=0).first():
         return jsonify({
             'code': -2,
             'message': '邮箱已存在',
@@ -70,7 +73,7 @@ def user_register(email, username, password):
 # 用户信息编辑函数
 def user_edit(email, username, password, avatar, nickname):
     # 查询用户是否存在
-    u = User.query.filter_by(username=username).first()
+    u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
@@ -121,7 +124,7 @@ def user_edit(email, username, password, avatar, nickname):
 # 用户删除函数
 def user_delete(username, password):
     # 查询用户是否存在
-    u = User.query.filter_by(username=username).first()
+    u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
@@ -174,7 +177,7 @@ def user_charge(username, balance):
         })
 
     # 查询用户是否存在
-    u = User.query.filter_by(username=username).first()
+    u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -3,
