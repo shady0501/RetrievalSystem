@@ -61,3 +61,25 @@ def admin_delete_user(username):
             'message': '账号注销失败',
             'data': None
         })
+
+
+# 管理员获取用户数据函数
+def admin_get_user_info():
+    # 获取未被删除的用户信息
+    users = User.query.filter_by(delete_flag=0).all()
+
+    if not users:
+        return jsonify({
+            'code': 0,
+            'message': '无用户数据',
+            'data': ""
+        })
+    # 将每个用户对象转换为字典，并存入列表
+    user_data = [user.to_dict() for user in users]
+
+    return jsonify({
+        'code': 0,
+        'message': '管理员获取用户数据成功',
+        'data': user_data
+    })
+

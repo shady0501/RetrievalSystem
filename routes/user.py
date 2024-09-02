@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.user import user_login, user_register, user_edit, user_delete, user_charge, user_download_picture
-from services.feedback_suggestion import feedback_submission
+from services.feedback_suggestion import feedback_submission, feedback_history
 from file_upload import handle_file_upload
 from services.personal_interface_setting import personal_setting
 
@@ -18,11 +18,11 @@ def login():
             'data': None
         })
 
-    username = data.get('username')
+    email = data.get('email')
     password = data.get('password')
 
     # 检查必填字段
-    if not username or not password:
+    if not email or not password:
         return jsonify({
             'code': -4,
             'message': '用户名和密码为必填项',
@@ -30,7 +30,7 @@ def login():
         })
 
     # 调用用户登录服务
-    return user_login(username, password)
+    return user_login(email, password)
 
 # 注册路由
 @user.route('/register', methods=['POST'])
@@ -45,10 +45,11 @@ def register():
 
     email = data.get('email')
     username = data.get('username')
+    nickname = data.get('nickname')
     password = data.get('password')
 
     # 检查必填字段
-    if not email or not username or not password:
+    if not email or not username or not password or not nickname:
         return jsonify({
             'code': -4,
             'message': '所有字段均为必填项',
@@ -56,12 +57,14 @@ def register():
         })
 
     # 调用用户注册服务
-    return user_register(email, username, password)
+    return user_register(email, username, nickname, password)
 
 # 编辑用户信息路由
-@user.route('/edit', methods=['PUT'])
+@user.route('/edit', methods=['POST'])
 def edit():
     data = request.form
+    print(request.data)
+    print(request.form)
     if not data:
         return jsonify({
             'code': -4,
@@ -80,6 +83,9 @@ def edit():
     email = data.get('email')
     password = data.get('password')
     nickname = data.get('nickname')
+    sex = data.get('sex')
+    birthday = data.get('birthday')
+    description = data.get('description')
 
     # 用户名是必填字段
     if not username:
@@ -90,7 +96,7 @@ def edit():
         })
 
     # 调用用户信息编辑服务
-    return user_edit(email, username, password, avatar, nickname)
+    return user_edit(email, username, password, avatar, nickname, sex, birthday, description)
 
 # 删除用户路由
 @user.route('/delete', methods=['DELETE'])
@@ -156,7 +162,7 @@ def feedback():
 
     username = data.get('username')
     content = data.get('content')
-    print("username="+username, "content="+content)
+
     if not username or not content:
         return jsonify({
             'code': -4,
@@ -223,3 +229,19 @@ def download_picture():
 
     # 调用用户下载图片服务
     return user_download_picture(filename, format, resolution)
+
+# 用户获得反馈记录路由
+@user.route('/get_feedback_history', methods=['POST'])
+def get_feedback_history():
+    data = request.form
+    print(data)
+    if not data:
+        return jsonify({
+            'code': -4,
+            'message': '无效输入',
+            'data': None
+        })
+
+    username = data.get('username')
+    # 调用用户反馈历史记录服务
+    return feedback_history(username)

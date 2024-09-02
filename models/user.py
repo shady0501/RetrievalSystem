@@ -21,8 +21,11 @@ class User(db.Model):
             'email': self.email,  # 用户电子邮件
             # 出于安全考虑，不建议在API中返回密码字段
             'permission_level': self.permission_level,  # 用户权限级别
-            'balance': float(self.balance),  # 用户余额，转换为浮点数
+            'balance': float(self.balance) if self.balance is not None else 0.0,  # 用户余额，转换为浮点数
             'search_condition_id': self.search_condition_id,  # 用户搜索条件ID
             'filter_condition_id': self.filter_condition_id,  # 用户过滤条件ID
-            'delete_flag': self.delete_flag  # 用户删除标记
+            'delete_flag': self.delete_flag or 0,  # 用户删除标记，缺省为 0
+            'birthday': self.birthday, # 用户生日
+            'sex': self.sex, # 用户性别
+            'description': self.description, # 用户个人简介
         }
