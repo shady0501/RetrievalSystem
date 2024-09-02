@@ -3,8 +3,7 @@ import time
 from flask import request, jsonify, current_app
 from PIL import Image
 
-# 配置上传文件夹和允许的文件类型
-
+# 配置用户上传文件夹和允许的文件类型
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片类型
 MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2MB 最大上传文件大小
 
@@ -26,7 +25,7 @@ def save_and_process_file(file, upload_folder):
 
         # 打开图片进行处理，例如调整大小
         with Image.open(file_path) as img:
-            img = img.resize((200, 200))  # 将头像图片调整为 200x200 像素
+            img = img.resize((200, 200))  # 将图片调整为 200x200 像素
             img.save(file_path)  # 保存处理后的图片
 
         return file_path
@@ -38,12 +37,12 @@ def ensure_upload_folder_exists(upload_folder):
         os.makedirs(upload_folder)
 
 # 处理文件上传的主函数，用于在 Flask 路由中调用
-def handle_file_upload(upload_folder):
+def handle_file_upload(upload_folder,file_field_name):
     # 确保上传文件夹存在
     ensure_upload_folder_exists(upload_folder)
 
     # 检查请求中是否包含文件部分
-    if 'avatar' not in request.files:
+    if file_field_name not in request.files:
         return jsonify({
             'code': -1,
             "message": "没有文件被上传",
@@ -51,7 +50,7 @@ def handle_file_upload(upload_folder):
         })
 
     # 获取上传的文件
-    file = request.files['avatar']
+    file = request.files[file_field_name]
 
     # 检查文件大小
     if file.content_length > MAX_CONTENT_LENGTH:
@@ -61,14 +60,14 @@ def handle_file_upload(upload_folder):
             "data": None
         })
 
-    # 保存并处理头像图片
+    # 保存并处理图片
     file_path = save_and_process_file(file, upload_folder)
     current_directory = os.getcwd()
     print(f"当前工作目录: {current_directory}")
     if file_path:
         return jsonify({
             'code': 0,
-            "message": "头像上传成功",
+            "message": "图片上传成功",
             "data": {"file_path": file_path}
         })
     else:

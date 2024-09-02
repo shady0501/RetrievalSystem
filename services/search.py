@@ -39,7 +39,11 @@ def image_search(image_file):
         text_ids = response_data.get('text_ids', [])
     except Exception as e:
         print(f"调用大模型接口失败: {e}")
-        return jsonify({'code': -1, 'message': '调用大模型接口失败', 'data': None})
+        return jsonify({
+            'code': -1,
+            'message': '调用大模型接口失败',
+            'data': None
+        })
 
     # 根据返回的文本ID在数据库中查询对应的文本信息
     text_list = []
@@ -48,4 +52,8 @@ def image_search(image_file):
         if text:
             text_list.append(text.to_dict())
 
-    return jsonify({'code': 0, 'message': '检索成功', 'data': text_list})
+    return jsonify({
+        'code': 0,
+        'message': '检索成功',
+        'data': text_list
+    })
