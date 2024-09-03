@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from flask_login import login_required
 
 from services.search_history import record_search_history, get_user_search_history, get_search_results, \
@@ -9,7 +10,7 @@ search_history = Blueprint('search_history', __name__)
 
 # 记录检索历史路由(一组对话)
 @search_history.route('/record', methods=['POST'])
-@login_required
+@jwt_required()
 def record():
     data = request.form
     if not data:
@@ -38,7 +39,7 @@ def record():
 
 # 记录检索历史路由(长篇对话)
 @search_history.route('/result_record', methods=['POST'])
-@login_required
+@jwt_required()
 def result_record():
     data = request.form
     if not data:
@@ -64,7 +65,7 @@ def result_record():
 
 # 获取用户检索历史列表路由
 @search_history.route('/list', methods=['GET'])
-@login_required
+@jwt_required()
 def list_history():
     user_id = request.args.get('user_id', type=int)
     page = request.args.get('page', 1, type=int)
@@ -83,7 +84,7 @@ def list_history():
 
 # 获取检索结果详情路由
 @search_history.route('/results', methods=['GET'])
-@login_required
+@jwt_required()
 def get_results():
     result_id = request.args.get('result_id', type=int)
 

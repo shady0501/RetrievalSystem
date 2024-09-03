@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
+
 from services.search import text_search
 from services.search import image_search
 from flask_login import login_required
@@ -8,7 +10,7 @@ search = Blueprint('search', __name__)
 
 # 文本检索路由
 @search.route('/text', methods=['POST'])
-# @login_required
+@jwt_required()
 def search_text():
     data = request.form
     if not data:
@@ -33,7 +35,7 @@ def search_text():
 
 # 图片检索路由
 @search.route('/image', methods=['POST'])
-@login_required
+@jwt_required()
 def search_image():
     if 'image_file' not in request.files:
         return jsonify({

@@ -1,5 +1,5 @@
 from flask_login import login_user
-
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from file_download import generate_image, send_image
 from models.user import User
 from flask import jsonify
@@ -25,10 +25,12 @@ def user_login(username, password):
         })
 
     u_dict = u.to_dict()  # 将用户对象转换为字典
-    login_user(u)
+    # 创建JWT访问令牌
+    access_token = create_access_token(identity={'username': u.username, 'user_id': u.id})
     return jsonify({
         'code': 0,
         'message': '登录成功',
+        'access_token': access_token,
         'data': u_dict
     })
 
@@ -72,6 +74,7 @@ def user_register(email, username, nickname, password):
 
 # 用户信息编辑函数
 def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
+    current_user = get_jwt_identity()
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
