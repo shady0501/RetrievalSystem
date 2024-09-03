@@ -1,21 +1,25 @@
-from http.client import responses
+import os
+
+from flask_jwt_extended import get_jwt_identity
 
 from models.image import Image
 from models.search_history import SearchHistory
 from models.text import Text
+from werkzeug.utils import secure_filename
 from config import db_init as db
-from flask_login import current_user
+import base64
 from datetime import datetime
 from flask import jsonify
 import requests
 
-
+UPLOAD_FOLDER = 'D:\code\RetrievalSystemBackend\pictures'  # 文件保存的文件夹
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 确保上传文件夹存在
 
 # 文本检索服务函数
 def text_search(keywords):
-    # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
     try:
-        response = requests.post('http://large-model-api-endpoint.com/search', data={'keywords': keywords})
+        # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
+        response = requests.post('http://192.168.186.76:5000/searchfor/image', json={'keywords': keywords})
         response_data = response.json()
         code = response_data.get('code')
 
@@ -37,16 +41,35 @@ def text_search(keywords):
     image_list = []
     for path in image_paths:
         # 实际查询数据库，获取图片信息
-        image = Image.query.filter_by(path=path).first()
+        image = Image.query.filter_by(path=UPLOAD_FOLDER+"\\"+path).first()
         if image:
-            image_list.append(image.to_dict())
+            # 读取图片并转换为 Base64 编码
+            try:
+                with open(image.path, 'rb') as img_file:
+                    img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+                    image_list.append({
+                        'id': image.id,
+                        'path': image.path,
+                        'description':image.description,
+                        'source':image.source,
+                        'format':image.format,
+                        'resolution':image.resolution,
+                        'image_data': img_base64
+                    })
+            except Exception as e:
+                print(f"读取图片失败: {e}")
+                return jsonify({'code': -1, 'message': '读取图片失败', 'data': None})
 
-    # 将查询到的图片路径转换为字符串以存储在search_pictur
+    image_out = []
+    for image in image_list:
+        image_out.append(image["image_data"])
+    # 将查询到的图片路径转换为字符串以存储在 search_pictur
     search_pictur = ','.join(image_paths)
 
+    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
     # 创建检索历史记录
     new_history = SearchHistory(
-        user_id=current_user.id,
+        user_id=int(current_user_id),  # 示例用户 ID，应该替换为实际用户 ID
         date=datetime.now(),
         search_type=0,  # 文本检索
         search_text=keywords,
@@ -55,64 +78,72 @@ def text_search(keywords):
     db.session.add(new_history)
     db.session.commit()
 
-    return jsonify({'code': 0, 'message': '检索成功', 'data': image_list})
+    return jsonify({'code': 0, 'message': '检索成功', 'data': image_out})
 
-
-# 图片检索服务函数
 def image_search(image_file):
-    # # 调用大模型接口，假设接口返回包含文本内容的字典
-    # try:
-    #     files = {'image_file': image_file}
-    #     response = requests.post('http://large-model-api-endpoint.com/image_search', files=files)
-    #     response_data = response.json()
-    #     text_ids = response_data.get('text_ids', [])
-    # except Exception as e:
-    #     print(f"调用大模型接口失败: {e}")
-    #     return jsonify({
-    #         'code': -1,
-    #         'message': '调用大模型接口失败',
-    #         'data': None
-    #     })
+    # 保存上传的文件到D盘pictures文件夹
+    filename = secure_filename(image_file.filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    image_file.save(file_path)  # 将文件保存到指定路径
 
-    # 假装调用大模型接口，返回一个测试结果
-    print("模拟调用大模型接口进行图片检索")
-    # 模拟的文本ID结果
-    text_ids = [1, 2]
-
-    # 使用模拟的文本ID数据
-    text_list = []
-    for text_id in text_ids:
-        # 使用模拟数据，不需要真正查询数据库
-        text_list.append({
-            'id': text_id,
-            'title': '模拟文本标题',
-            'content': '这是模拟的文本内容',
-            'source': '模拟来源'
+    # 调用大模型接口，传递文件路径
+    try:
+        response = requests.post(
+            'http://192.168.186.76:5000/searchfor/text',
+            json={'keywords': file_path}
+        )
+        response_data = response.json()
+        content_list = response_data.get('message', [])
+    except Exception as e:
+        print(f"调用大模型接口失败: {e}")
+        return jsonify({
+            'code': -1,
+            'message': '调用大模型接口失败',
+            'data': None
         })
 
-    # 将文本ID转换为逗号分隔的字符串以存储在search_text
-    search_text = ','.join(map(str, text_ids))
+    # 根据返回的内容在数据库中查询其他信息
+    text_list = []
+    for content in content_list:
+        text = Text.query.filter_by(content=content).first()  # 根据content查询Text表
+        if text:
+            text_list.append({
+                'title': text.title,
+                'content': text.content,
+                'source': text.source
+            })
+        else:
+            text_list.append({
+                'title': '无',
+                'content': content,
+                'source': '未知'
+            })
 
-    # # 根据返回的文本ID在数据库中查询对应的文本信息
-    # text_list = []
-    # for text_id in text_ids:
-    #     text = Text.query.filter_by(id=text_id).first()
-    #     if text:
-    #         text_list.append(text.to_dict())
+    # 将text_list转换为字符串形式存储在数据库中
+    search_text = ', '.join(
+        [f"Title: {text['title']}, Content: {text['content']}, Source: {text['source']}" for text in text_list])
 
-    # 将上传的文件名作为search_pictur来存储
-    search_pictur = image_file.filename
+    search_pictur = file_path
 
-    # 创建检索历史记录
     new_history = SearchHistory(
-        user_id=current_user.id,
+        user_id=1,  # 假设用户ID为1
         date=datetime.now(),
         search_type=1,  # 图片检索
-        search_text=search_text,  # 使用模拟的文本ID
-        search_pictur=search_pictur  # 使用上传的文件名
+        search_text=search_text,  # 使用格式化的字符串文本信息
+        search_pictur=search_pictur  # 使用文件路径
     )
     db.session.add(new_history)
-    db.session.commit()
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        print(f"数据库提交失败: {e}")
+        db.session.rollback()
+        return jsonify({
+            'code': -1,
+            'message': '数据库提交失败',
+            'data': None
+        })
 
     return jsonify({
         'code': 0,
