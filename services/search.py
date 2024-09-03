@@ -1,3 +1,5 @@
+from http.client import responses
+
 from models.image import Image
 from models.search_history import SearchHistory
 from models.text import Text
@@ -11,62 +13,50 @@ import requests
 
 # 文本检索服务函数
 def text_search(keywords):
-    # # 调用大模型接口，假设接口返回包含图片路径的字典
-    # try:
-    #     response = requests.post('http://large-model-api-endpoint.com/search', data={'keywords': keywords})
-    #     response_data = response.json()
-    #     image_paths = response_data.get('image_paths', [])
-    # except Exception as e:
-    #     print(f"调用大模型接口失败: {e}")
-    #     return jsonify({'code': -1,
-    #                     'message': '调用大模型接口失败',
-    #                     'data': None
-    #     })
+    # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
+    try:
+        response = requests.post('http://large-model-api-endpoint.com/search', data={'keywords': keywords})
+        response_data = response.json()
+        code = response_data.get('code')
 
-    # 假装调用大模型接口，返回一个测试结果
-    print("模拟调用大模型接口进行文本检索")
-    # 模拟的图片路径结果
-    image_paths = ['/path/to/image1.jpg', '/path/to/image2.jpg']
+        if code == 200:
+            # 请求成功，获取图片路径
+            image_paths = response_data.get('message', [])
+        elif code == 400:
+            # 请求失败，获取错误信息
+            error_message = response_data.get('error', '未知错误')
+            return jsonify({'code': 400, 'message': error_message, 'data': None})
+        else:
+            # 其他情况，返回通用错误
+            return jsonify({'code': -1, 'message': '未知错误', 'data': None})
+    except Exception as e:
+        print(f"调用大模型接口失败: {e}")
+        return jsonify({'code': -1, 'message': '调用大模型接口失败', 'data': None})
 
-
-    # 根据返回的图片路径在数据库中查询对应的图片信息
+    # 根据返回的图片路径创建模拟数据
     image_list = []
     for path in image_paths:
-        # image = Image.query.filter_by(path=path).first()
-        # if image:
-        #     image_list.append(image.to_dict())
+        # 实际查询数据库，获取图片信息
+        image = Image.query.filter_by(path=path).first()
+        if image:
+            image_list.append(image.to_dict())
 
-        # 使用模拟的图片路径数据
-        image_list = []
-        for path in image_paths:
-            # 使用模拟数据，不需要真正查询数据库
-            image_list.append({
-                'id': 1,  # 假设图片ID
-                'path': path,
-                'description': '模拟图片描述',
-                'source': '模拟来源',
-                'format': 'jpg',
-                'resolution': '1920x1080'
-            })
+    # 将查询到的图片路径转换为字符串以存储在search_pictur
+    search_pictur = ','.join(image_paths)
 
-        # 将查询到的图片路径转换为字符串以存储在search_pictur
-        search_pictur = ','.join(image_paths)
+    # 创建检索历史记录
+    new_history = SearchHistory(
+        user_id=current_user.id,
+        date=datetime.now(),
+        search_type=0,  # 文本检索
+        search_text=keywords,
+        search_pictur=search_pictur
+    )
+    db.session.add(new_history)
+    db.session.commit()
 
-        # 创建检索历史记录
-        new_history = SearchHistory(
-            user_id=current_user.id,
-            date=datetime.now(),
-            search_type=0,  # 文本检索
-            search_text=keywords,
-            search_pictur=search_pictur
-        )
-        db.session.add(new_history)
-        db.session.commit()
+    return jsonify({'code': 0, 'message': '检索成功', 'data': image_list})
 
-    return jsonify({'code': 0,
-                    'message': '检索成功',
-                    'data': image_list
-    })
 
 # 图片检索服务函数
 def image_search(image_file):

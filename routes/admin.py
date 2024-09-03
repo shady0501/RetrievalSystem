@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
+
 from services.admin import admin_reset_password, admin_delete_user, admin_get_user_info
 
 # 创建管理员蓝图，用于处理与管理员相关的路由
@@ -6,6 +8,7 @@ admin = Blueprint('admin', __name__)
 
 # 管理员重置用户密码路由
 @admin.route('/reset_password', methods=['POST'])
+@jwt_required()
 def reset_password():
     data = request.json
     if not data:
@@ -31,8 +34,9 @@ def reset_password():
 
 # 管理员注销用户账号路由
 @admin.route('/delete_user', methods=['POST'])
+@jwt_required()
 def delete_user():
-    data = request.json
+    data = request.form
     if not data:
         return jsonify({
             'code': -3,
@@ -55,6 +59,7 @@ def delete_user():
 
 # 管理员获取用户数据路由
 @admin.route('/get_user_info', methods=['GET'])
+@jwt_required()
 def get_user_info():
     # 调用管理员获取用户数据服务
     return admin_get_user_info()
