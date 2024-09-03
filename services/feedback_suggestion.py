@@ -9,8 +9,8 @@ def feedback_submission(username,content):
     u = User.query.filter_by(username=username).first()
     if u is None:
         return jsonify({
-            'code': 0,
-            "message": "用户反馈成功",
+            'code': -5,
+            "message": "该用户不存在",
             "data": None
         })
 
