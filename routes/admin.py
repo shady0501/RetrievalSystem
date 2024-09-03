@@ -37,16 +37,14 @@ def edit_user_info():
 # 管理员注销用户账号路由
 @admin.route('/delete_user', methods=['POST'])
 def delete_user():
-    data = request.json
+    data = request.form
     if not data:
         return jsonify({
             'code': -3,
             'message': '无效输入',
             'data': None
         })
-
     username = data.get('username')
-
     # 检查必填字段
     if not username:
         return jsonify({

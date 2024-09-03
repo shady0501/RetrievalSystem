@@ -5,18 +5,26 @@ from config import db_init as db
 
 # 管理员修改用户信息函数
 def admin_edit_user_info(username, password, email, nickname, birthday, sex, description):
-    # 查询用户是否存在
-    u = User.query.filter_by(username=username).first()
+    # 查询用户是否存在且未被删除
+    u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
             'message': '用户不存在',
             'data': None
         })
-
+    print(birthday)
     if birthday:
         try:
-            datetime.strptime(birthday, '%Y-%m-%d')
+            # 尝试使用第一种格式解析日期
+            try:
+                date_obj = datetime.strptime(birthday, '%Y-%m-%d')
+            except ValueError:
+                # 如果第一种格式失败，尝试使用第二种格式
+                date_obj = datetime.strptime(birthday, '%a, %d %b %Y %H:%M:%S GMT')
+
+            # 将日期对象转换为数据库支持的日期格式
+            birthday = date_obj.strftime('%Y-%m-%d')
         except ValueError:
             return jsonify({
                 'code': -3,
