@@ -1,16 +1,15 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-
-from services.admin import admin_reset_password, admin_delete_user, admin_get_user_info
+from services.admin import admin_edit_user_info, admin_delete_user, admin_get_user_info
 
 # 创建管理员蓝图，用于处理与管理员相关的路由
 admin = Blueprint('admin', __name__)
 
-# 管理员重置用户密码路由
-@admin.route('/reset_password', methods=['POST'])
+# 管理员修改用户信息路由
+@admin.route('/edit_user_info', methods=['POST'])
 @jwt_required()
-def reset_password():
-    data = request.json
+def edit_user_info():
+    data = request.form
     if not data:
         return jsonify({
             'code': -3,
@@ -19,18 +18,23 @@ def reset_password():
         })
 
     username = data.get('username')
-    new_password = data.get('new_password')
+    password = data.get('password')
+    email = data.get('email')
+    nickname = data.get('nickname')
+    birthday = data.get('birthday')
+    sex = data.get('sex')
+    description = data.get('description')
 
     # 检查必填字段
-    if not username or not new_password:
+    if not username:
         return jsonify({
             'code': -3,
-            'message': '用户名和新密码为必填项',
+            'message': '用户名为必填项',
             'data': None
         })
 
-    # 调用管理员重置用户密码服务
-    return admin_reset_password(username, new_password)
+    # 调用管理员修改用户信息服务
+    return admin_edit_user_info(username, password, email, nickname, birthday, sex, description)
 
 # 管理员注销用户账号路由
 @admin.route('/delete_user', methods=['POST'])
