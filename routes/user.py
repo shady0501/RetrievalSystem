@@ -164,7 +164,7 @@ def feedback():
 
     username = data.get('username')
     content = data.get('content')
-
+    print(username, content)
     if not username or not content:
         return jsonify({
             'code': -4,

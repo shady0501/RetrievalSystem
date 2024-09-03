@@ -18,7 +18,7 @@ db_init = SQLAlchemy(app)
 # 初始化Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'  # 指定登录视图的名称，调整为实际的登录路由
+login_manager.login_view = 'Login'  # 指定登录视图的名称，调整为实际的登录路由
 login_manager.login_message = None
 login_manager.needs_refresh_message = None
 
@@ -33,4 +33,4 @@ def unauthorized():
         'code': -1,
         'message': '用户未登录',
         'data': None
-    }), 401
+    }), 800
