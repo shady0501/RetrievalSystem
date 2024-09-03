@@ -7,7 +7,7 @@ from config import db_init as db
 def personal_setting(username,theme,font_style,background_image):
     u = User.query.filter_by(username=username).first()
 
-    if theme is None or font_style is None or background_image is None:
+    if theme is None and font_style is None and background_image is None:
         return jsonify({
             'code': -10,
             "message": "数据缺失，请重试",

@@ -3,6 +3,7 @@ from flask_login import login_required
 from services.user import user_login, user_register, user_edit, user_delete, user_charge, user_download_picture
 from services.feedback_suggestion import feedback_submission, feedback_history
 from file_upload import handle_file_upload
+from flask_jwt_extended import jwt_required
 from services.personal_interface_setting import personal_setting
 
 # 创建用户蓝图，用于处理与用户相关的路由
@@ -62,7 +63,8 @@ def register():
 
 # 编辑用户信息路由
 @user.route('/edit', methods=['POST'])
-@login_required
+@jwt_required()
+
 def edit():
     data = request.form
     print(request.data)
@@ -102,6 +104,7 @@ def edit():
 
 # 删除用户路由
 @user.route('/delete', methods=['DELETE'])
+@jwt_required()
 def delete():
     data = request.form
     if not data:
@@ -127,6 +130,7 @@ def delete():
 
 # 用户充值路由
 @user.route('/charge', methods=['POST'])
+@jwt_required()
 def charge():
     data = request.form
     if not data:
@@ -152,6 +156,7 @@ def charge():
 
 
 @user.route('/feedback', methods=['POST'])
+@jwt_required()
 def feedback():
     data = request.form
     print(data)
@@ -175,6 +180,7 @@ def feedback():
 
 # 编辑用户个性化设置路由
 @user.route('/personal', methods=['POST'])
+@jwt_required()
 def personal_interface_setting():
     data = request.form
     if not data:
@@ -208,6 +214,7 @@ def personal_interface_setting():
 
 # 用户下载图片路由
 @user.route('/download', methods=['POST'])
+@jwt_required()
 def download_picture():
     data = request.form
     if not data:
@@ -234,6 +241,7 @@ def download_picture():
 
 # 用户获得反馈记录路由
 @user.route('/get_feedback_history', methods=['POST'])
+@jwt_required()
 def get_feedback_history():
     data = request.form
     print(data)
