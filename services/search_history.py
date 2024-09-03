@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 
-# 记录检索历史服务函数
+# 记录检索历史服务函数(一组)
 def record_search_history(user_id, search_type, search_text_list, search_pictur_list):
     # 确保 search_type 是整数 0 或 1
     if search_type not in [0, 1]:
@@ -120,12 +120,11 @@ def get_user_search_history(user_id, page, per_page):
 
 
 
-# 获取检索结果详情服务函数
+# 获取检索结果详情服务函数(长篇)
 def get_search_results(result_id):
     try:
         # 根据 result_id 查询 SearchResult 表以获取对应的 history_id
         results = SearchResult.query.filter_by(id=result_id).all()
-
         if not results:
             return jsonify({
                 'code': -1,
