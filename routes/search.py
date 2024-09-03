@@ -3,7 +3,6 @@ from flask_jwt_extended import jwt_required
 
 from services.search import text_search
 from services.search import image_search
-from flask_login import login_required
 
 # 创建搜索蓝图，用于处理与搜索相关的路由
 search = Blueprint('search', __name__)
