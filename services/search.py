@@ -19,7 +19,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 确保上传文件夹存在
 def text_search(keywords):
     try:
         # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
-        response = requests.post('http://192.168.186.76:5000/searchfor/image', json={'keywords': keywords})
+        response = requests.post('http://192.168.156.80:5000/searchfor/image', json={'keywords': keywords})
         response_data = response.json()
         code = response_data.get('code')
 
@@ -89,7 +89,7 @@ def image_search(image_file):
     # 调用大模型接口，传递文件路径
     try:
         response = requests.post(
-            'http://192.168.186.76:5000/searchfor/text',
+            'http://192.168.156.80:5000/searchfor/text',
             json={'keywords': file_path}
         )
         response_data = response.json()
@@ -148,5 +148,5 @@ def image_search(image_file):
     return jsonify({
         'code': 0,
         'message': '检索成功',
-        'data': text_list
+        'text_list': text_list
     })
