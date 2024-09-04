@@ -84,6 +84,32 @@ def register():
     # 调用用户注册服务
     return user_register(email, username, nickname, password)
 
+# 用户重置密码路由
+@user.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.form
+
+    if not data:
+        return jsonify({
+            'code': -4,
+            'message': '无效输入',
+            'data': None
+        })
+
+    username = data.get('username')
+    password = data.get('password')
+
+    # 用户名是必填字段
+    if not username:
+        return jsonify({
+            'code': -4,
+            'message': '用户名为必填项',
+            'data': None
+        })
+
+    # 调用用户信息编辑服务
+    return user_edit(None, username, password, None, None, None, None, None)
+
 # 编辑用户信息路由
 @user.route('/edit', methods=['POST'])
 @jwt_required()

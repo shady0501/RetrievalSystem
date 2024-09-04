@@ -74,7 +74,6 @@ def user_register(email, username, nickname, password):
 
 # 用户信息编辑函数
 def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
-    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
