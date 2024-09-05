@@ -1,38 +1,61 @@
-from flask_jwt_extended import get_jwt_identity
-from config import db_init as db
-from models.backup_settings import BackupSetting
-from flask import jsonify
+from flask_jwt_extended import get_jwt_identity  # 导入 JWT 身份获取方法
+from config import db_init as db  # 导入数据库初始化配置
+from models.backup_settings import BackupSetting  # 导入备份设置模型
+from flask import jsonify  # 导入 jsonify 用于返回 JSON 响应
+
 
 # 获取备份设置服务函数
 def get_setting():
+    """
+    获取当前管理员的备份设置
+
+    返回:
+        JSON 响应: 包含备份设置的 JSON 对象
+    """
     try:
+        # 获取当前管理员的用户ID
+        admin_id = get_jwt_identity().get('user_id')
         # 查询备份设置表数据
-        admin_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
         setting = BackupSetting.query.filter_by(admin_id=admin_id).first()
+
+        # 如果没有找到备份设置
         if not setting:
             return jsonify({
                 'code': -1,
-                'message': '该管理员无备份',
+                'message': '该管理员无备份设置',
                 'data': None
             })
-        setting_dict = setting.to_dict()  # 将备份设置对象转换为字典
+
+        # 将备份设置对象转换为字典
+        setting_dict = setting.to_dict()
         return jsonify({
             'code': 0,
             'message': '获取备份设置成功',
             'data': setting_dict,
         })
     except Exception as e:
-        print(f"获取备份记录失败: {e}")
+        print(f"获取备份设置失败: {e}")
         return jsonify({
             'code': -1,
             'message': '获取备份设置失败',
             'data': None
         })
 
+
 # 更改备份设置服务函数
 def set_setting(backup_frequency, backup_path):
+    """
+    更改当前管理员的备份设置
+
+    参数:
+        backup_frequency (str): 备份频率
+        backup_path (str): 备份路径
+
+    返回:
+        JSON 响应: 包含操作结果的 JSON 对象
+    """
     try:
-        # 获取当前用户ID
+        # 获取当前管理员的用户ID
         admin_id = get_jwt_identity().get('user_id')
 
         # 查询备份设置表数据
@@ -61,7 +84,7 @@ def set_setting(backup_frequency, backup_path):
 
     except Exception as e:
         db.session.rollback()  # 如果出现错误，回滚事务
-        print(f"更改备份记录失败: {e}")
+        print(f"更改备份设置失败: {e}")
         return jsonify({
             'code': -1,
             'message': '更改备份设置失败',

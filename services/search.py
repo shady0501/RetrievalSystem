@@ -1,21 +1,30 @@
-import os
-import base64
-from datetime import datetime
-from flask import jsonify
-from flask_jwt_extended import get_jwt_identity
-from werkzeug.utils import secure_filename
-from concurrent.futures import ThreadPoolExecutor
-from models.image import Image
-from models.search_history import SearchHistory
-from models.text import Text
-from config import db_init as db
-import requests
+import os  # 导入 os 模块用于文件操作
+import base64  # 导入 base64 模块用于图片编码
+from datetime import datetime  # 导入 datetime 用于时间处理
+from flask import jsonify  # 导入 jsonify 用于返回 JSON 响应
+from flask_jwt_extended import get_jwt_identity  # 导入 get_jwt_identity 获取 JWT 用户身份
+from werkzeug.utils import secure_filename  # 导入 secure_filename 用于文件名处理
+from concurrent.futures import ThreadPoolExecutor  # 导入 ThreadPoolExecutor 用于并行处理
+from models.image import Image  # 导入 Image 模型
+from models.search_history import SearchHistory  # 导入 SearchHistory 模型
+from models.text import Text  # 导入 Text 模型
+from config import db_init as db  # 导入数据库配置
+import requests  # 导入 requests 模块用于 HTTP 请求
 
-UPLOAD_FOLDER = 'D:\code\RetrievalSystemBackend\pictures'  # 文件保存的文件夹
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 确保上传文件夹存在
-
+# 设置图片上传文件夹路径，并确保文件夹存在
+UPLOAD_FOLDER = 'D:\\code\\RetrievalSystemBackend\\pictures'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 如果文件夹不存在则创建
 
 def read_and_encode_image(image_path):
+    """
+    读取图片文件并进行 Base64 编码
+
+    参数:
+        image_path (str): 图片文件路径
+
+    返回:
+        str: 图片的 Base64 编码字符串，如果读取失败则返回 None
+    """
     try:
         with open(image_path, 'rb') as img_file:
             img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
@@ -24,11 +33,19 @@ def read_and_encode_image(image_path):
         print(f"读取图片失败: {e}")
         return None
 
-
 # 文本检索服务函数
 def text_search(keywords):
+    """
+    根据关键词执行文本检索
+
+    参数:
+        keywords (str): 检索关键词
+
+    返回:
+        JSON 响应: 包含检索结果的 JSON 对象
+    """
     try:
-        # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
+        # 调用大模型接口，获取图片路径或错误信息
         response = requests.post('http://172.20.10.13:5000/searchfor/image', json={'keywords': keywords})
         response_data = response.json()
         code = response_data.get('code')
@@ -45,7 +62,10 @@ def text_search(keywords):
             return jsonify({'code': -1, 'message': '未知错误', 'data': None})
     except Exception as e:
         print(f"调用大模型接口失败: {e}")
-        return jsonify({'code': -1, 'message': '正在响应，请稍等', 'data': None})
+        return jsonify({'code': -1,
+                        'message': '正在响应，请稍等',
+                        'data': None
+                        })
 
     # 批量查询数据库，获取所有相关图片信息
     images = Image.query.filter(Image.path.in_([os.path.join(UPLOAD_FOLDER, path) for path in image_paths])).all()
@@ -70,9 +90,9 @@ def text_search(keywords):
 
     image_out = [image["image_data"] for image in image_list]
 
+    # 记录检索历史
     search_pictur = ','.join(image_paths)
     current_user_id = get_jwt_identity().get('user_id')
-    # 创建检索历史记录
     new_history = SearchHistory(
         user_id=int(current_user_id),
         date=datetime.now(),
@@ -83,16 +103,29 @@ def text_search(keywords):
     db.session.add(new_history)
     db.session.commit()
 
-    return jsonify({'code': 0, 'message': '检索成功', 'data': image_out})
+    return jsonify({'code': 0,
+                    'message': '检索成功',
+                    'data': image_out,
+                    'search_history_id': new_history.id
+                    })
 
-
+# 图片检索服务函数
 def image_search(image_file):
-    # 保存上传的文件到D盘pictures文件夹
+    """
+    根据上传的图片文件执行图片检索
+
+    参数:
+        image_file (FileStorage): 上传的图片文件对象
+
+    返回:
+        JSON 响应: 包含检索结果的 JSON 对象
+    """
+    # 保存上传的文件到指定文件夹
     filename = secure_filename(image_file.filename)
     file_path = os.path.join(UPLOAD_FOLDER, filename)
-    image_file.save(file_path)  # 将文件保存到指定路径
+    image_file.save(file_path)  # 保存文件
 
-    # 调用大模型接口，传递文件路径
+    # 调用大模型接口，传递文件路径进行检索
     try:
         response = requests.post(
             'http://172.20.10.13:5000/searchfor/text',
@@ -118,6 +151,7 @@ def image_search(image_file):
         if content not in found_content:
             text_list.append({'title': '无', 'content': content, 'source': '未知'})
 
+    # 记录检索历史
     search_text = ', '.join(
         [f"Title: {text['title']}, Content: {text['content']}, Source: {text['source']}" for text in text_list])
     search_pictur = file_path
@@ -145,5 +179,6 @@ def image_search(image_file):
     return jsonify({
         'code': 0,
         'message': '检索成功',
-        'text_list': text_list
+        'text_list': text_list,
+        'search_history_id': new_history.id
     })
