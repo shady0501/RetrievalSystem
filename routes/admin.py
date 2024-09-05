@@ -1,8 +1,8 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
-from services.admin import admin_edit_user_info, admin_delete_user, admin_get_user_info
-from services.backup_record import get_record, create_backup
-from services.backup_settings import get_setting, set_setting
+from flask import Blueprint, request, jsonify  # 导入 Flask Blueprint、request 和 jsonify
+from flask_jwt_extended import jwt_required  # 导入 JWT 认证所需的装饰器
+from services.admin import admin_edit_user_info, admin_delete_user, admin_get_user_info  # 导入管理员相关服务
+from services.backup_record import get_record, create_backup  # 导入备份记录相关服务
+from services.backup_settings import get_setting, set_setting  # 导入备份设置相关服务
 
 # 创建管理员蓝图，用于处理与管理员相关的路由
 admin = Blueprint('admin', __name__)
@@ -11,6 +11,9 @@ admin = Blueprint('admin', __name__)
 @admin.route('/edit_user_info', methods=['POST'])
 @jwt_required()
 def edit_user_info():
+    """
+    处理管理员修改用户信息的请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -19,6 +22,7 @@ def edit_user_info():
             'data': None
         })
 
+    # 从请求表单中获取用户信息字段
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
@@ -42,6 +46,9 @@ def edit_user_info():
 @admin.route('/delete_user', methods=['POST'])
 @jwt_required()
 def delete_user():
+    """
+    处理管理员注销用户账号的请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -49,7 +56,9 @@ def delete_user():
             'message': '无效输入',
             'data': None
         })
+
     username = data.get('username')
+
     # 检查必填字段
     if not username:
         return jsonify({
@@ -65,6 +74,9 @@ def delete_user():
 @admin.route('/get_user_info', methods=['GET'])
 @jwt_required()
 def get_user_info():
+    """
+    处理管理员获取用户数据的请求
+    """
     # 调用管理员获取用户数据服务
     return admin_get_user_info()
 
@@ -72,6 +84,9 @@ def get_user_info():
 @admin.route('/get_setting', methods=['GET'])
 @jwt_required()
 def admin_get_setting():
+    """
+    处理管理员获取备份设置的请求
+    """
     # 调用管理员备份设置服务
     return get_setting()
 
@@ -79,6 +94,9 @@ def admin_get_setting():
 @admin.route('/set_setting', methods=['POST'])
 @jwt_required()
 def admin_set_setting():
+    """
+    处理管理员更改备份设置的请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -97,6 +115,9 @@ def admin_set_setting():
 @admin.route('/get_record', methods=['GET'])
 @jwt_required()
 def admin_get_record():
+    """
+    处理管理员获取备份记录的请求
+    """
     # 调用管理员获取备份记录服务
     return get_record()
 
@@ -104,5 +125,8 @@ def admin_get_record():
 @admin.route('/create_backup', methods=['GET'])
 @jwt_required()
 def admin_create_backup():
+    """
+    处理管理员进行备份的请求
+    """
     # 调用管理员进行备份服务
     return create_backup()

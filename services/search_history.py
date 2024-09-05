@@ -1,12 +1,30 @@
+import os
+from concurrent.futures import ThreadPoolExecutor
+
+from models.image import Image
 from models.search_history import SearchHistory, SearchResult
 from flask import jsonify
 from config import db_init as db
 from datetime import datetime
 import json
 
+from services.search import UPLOAD_FOLDER, read_and_encode_image
+
 
 # 记录检索历史服务函数(一组)
 def record_search_history(user_id, search_type, search_text_list, search_pictur_list):
+    """
+        记录检索历史
+
+        参数:
+            user_id (int): 用户 ID
+            search_type (int): 检索类型（0 表示文本检索，1 表示图片检索）
+            search_text_list (list): 检索文本列表
+            search_pictur_list (list): 检索图片列表
+
+        返回:
+            JSON 响应: 包含记录结果的 JSON 对象
+        """
     # 确保 search_type 是整数 0 或 1
     if search_type not in [0, 1]:
         return jsonify({
@@ -50,6 +68,16 @@ def record_search_history(user_id, search_type, search_text_list, search_pictur_
         })
 
 def record_search_result(user_id, history_id_list):
+    """
+       记录检索结果
+
+       参数:
+           user_id (int): 用户 ID
+           history_id_list (list): 检索历史 ID 列表
+
+       返回:
+           JSON 响应: 包含记录结果的 JSON 对象
+       """
     # 将数组转换为 JSON 字符串存储
     history_id = json.dumps(history_id_list) if history_id_list else '[]'
 
@@ -78,43 +106,74 @@ def record_search_result(user_id, history_id_list):
         })
 
 # 获取用户检索历史列表服务函数
-def get_user_search_history(user_id, page, per_page):
+def get_user_search_history(search_history_id):
+    """
+       获取用户检索历史
+
+       参数:
+           search_history_id (int): 检索历史 ID
+
+       返回:
+           JSON 响应: 包含检索历史记录的 JSON 对象
+       """
     try:
-        # 查询用户的检索历史数据并进行分页
-        histories = SearchHistory.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page,
-                                                                            error_out=False)
-        history_list = []
-        for history in histories.items:
-            history_dict = history.to_dict()
+        # 根据传入的search_history_id查询单个检索历史记录
+        history = SearchHistory.query.filter_by(id=search_history_id).first()
 
-            # 将存储的 JSON 字符串反序列化为列表，若为空则返回空列表
-            try:
-                history_dict['search_text'] = json.loads(history_dict['search_text']) if history_dict[
-                    'search_text'] else []
-            except json.JSONDecodeError:
-                history_dict['search_text'] = []  # 若解析失败，返回空列表
+        if not history:
+            return jsonify({
+                'code': 404,
+                'message': '检索历史记录未找到',
+                'data': None
+            })
 
-            try:
-                history_dict['search_pictur'] = json.loads(history_dict['search_pictur']) if history_dict[
-                    'search_pictur'] else []
-            except json.JSONDecodeError:
-                history_dict['search_pictur'] = []  # 若解析失败，返回空列表
+        # 将检索历史记录转换为字典
+        history_dict = history.to_dict()
 
-            history_list.append(history_dict)
+        # 打印 search_text
+        print(history_dict['search_text'])
+
+        # 解析 search_pictur 字段，获取图片路径列表
+        picture_paths = history_dict['search_pictur'].split(',') if history_dict['search_pictur'] else []
+
+        # 批量查询数据库，获取所有相关图片信息
+        images = Image.query.filter(Image.path.in_([os.path.join(UPLOAD_FOLDER, path) for path in picture_paths])).all()
+
+        # 使用线程池并行处理图片读取和编码
+        image_list = []
+        with ThreadPoolExecutor() as executor:
+            futures = {executor.submit(read_and_encode_image, image.path): image for image in images}
+            for future in futures:
+                image = futures[future]
+                img_base64 = future.result()
+                if img_base64:
+                    image_list.append({
+                        'id': image.id,
+                        'path': image.path,
+                        'description': image.description,
+                        'source': image.source,
+                        'format': image.format,
+                        'resolution': image.resolution,
+                        'image_data': img_base64
+                    })
+
+        # 打印 image_list
+        print(image_list)
 
         return jsonify({
             'code': 0,
-            'message': '获取检索历史列表成功',
-            'data': history_list,
-            'total': histories.total,  # 总条目数
-            'pages': histories.pages,  # 总页数
-            'current_page': histories.page  # 当前页码
+            'message': '获取检索历史记录成功',
+            'data': {
+                'search_text': history_dict['search_text'],
+                'images': image_list
+            }
         })
+
     except Exception as e:
-        print(f"获取检索历史列表失败: {e}")
+        print(f"获取检索历史记录失败: {e}")
         return jsonify({
             'code': -1,
-            'message': '获取检索历史列表失败',
+            'message': '获取检索历史记录失败',
             'data': None
         })
 
@@ -122,6 +181,15 @@ def get_user_search_history(user_id, page, per_page):
 
 # 获取检索结果详情服务函数(长篇)
 def get_search_results(result_id):
+    """
+       获取检索结果详情
+
+       参数:
+           result_id (int): 检索结果 ID
+
+       返回:
+           JSON 响应: 包含检索结果详情的 JSON 对象
+       """
     try:
         # 根据 result_id 查询 SearchResult 表以获取对应的 history_id
         results = SearchResult.query.filter_by(id=result_id).all()

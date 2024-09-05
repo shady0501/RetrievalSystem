@@ -1,13 +1,14 @@
-import uuid
-from flask import Blueprint, request, jsonify, redirect, url_for
-from flask_login import login_required
-from services.user import user_login, user_register, user_edit, user_delete, get_user_balance, set_user_balance, user_charge, user_download_picture
-from flask import Blueprint, request, jsonify
-from services.user import user_login, user_register, user_edit, user_delete, user_charge, user_download_picture
-from services.feedback_suggestion import feedback_submission, feedback_history
-from file_upload import handle_file_upload
-from flask_jwt_extended import jwt_required
-from services.personal_interface_setting import personal_setting
+import uuid  # 导入 UUID 模块
+from flask import Blueprint, request, jsonify, redirect, url_for  # 导入 Flask Blueprint、request、jsonify、redirect 和 url_for
+from flask_login import login_required  # 导入 Flask-Login 的 login_required 装饰器
+from flask_jwt_extended import jwt_required  # 导入 JWT 认证所需的装饰器
+from services.user import (
+    user_login, user_register, user_edit, user_delete,
+    get_user_balance, set_user_balance, user_charge, user_download_picture
+)  # 导入用户相关服务
+from services.feedback_suggestion import feedback_submission, feedback_history  # 导入反馈建议相关服务
+from file_upload import handle_file_upload  # 导入文件上传处理函数
+from services.personal_interface_setting import personal_setting  # 导入个人界面设置服务
 
 # 创建用户蓝图，用于处理与用户相关的路由
 user = Blueprint('user', __name__)
@@ -15,6 +16,9 @@ user = Blueprint('user', __name__)
 # 登录路由
 @user.route('/login', methods=['POST'])
 def login():
+    """
+    处理用户登录请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -40,6 +44,9 @@ def login():
 # 注册路由
 @user.route('/register', methods=['POST'])
 def register():
+    """
+    处理用户注册请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -67,8 +74,10 @@ def register():
 # 用户重置密码路由
 @user.route('/reset_password', methods=['POST'])
 def reset_password():
+    """
+    处理用户重置密码请求
+    """
     data = request.form
-
     if not data:
         return jsonify({
             'code': -4,
@@ -93,11 +102,11 @@ def reset_password():
 # 编辑用户信息路由
 @user.route('/edit', methods=['POST'])
 @jwt_required()
-
 def edit():
+    """
+    处理编辑用户信息请求
+    """
     data = request.form
-    print(request.data)
-    print(request.form)
     if not data:
         return jsonify({
             'code': -4,
@@ -106,12 +115,13 @@ def edit():
         })
 
     upload_folder = 'D:/code/RetrievalSystemBackend/avatar/'
-    response = handle_file_upload(upload_folder,'avatar')
+    response = handle_file_upload(upload_folder, 'avatar')
     response_data = response.get_json()
     if response_data['code'] == 0:
         avatar = response_data['data']['file_path']
     else:
         avatar = None
+
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
@@ -135,6 +145,9 @@ def edit():
 @user.route('/delete', methods=['DELETE'])
 @jwt_required()
 def delete():
+    """
+    处理删除用户请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -161,12 +174,18 @@ def delete():
 @user.route('/get_user_balance', methods=['GET'])
 @jwt_required()
 def get_balance():
+    """
+    处理获取用户余额请求
+    """
     return get_user_balance()
 
 # 更改用户余额路由
 @user.route('/set_user_balance', methods=['POST'])
 @jwt_required()
 def set_balance():
+    """
+    处理更改用户余额请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -174,6 +193,7 @@ def set_balance():
             'message': '无效输入',
             'data': None
         })
+
     money = data.get('money')
     if money is None or float(money) < 0:
         return jsonify({
@@ -181,12 +201,16 @@ def set_balance():
             'message': '扣款金额非法',
             'data': None
         })
+
     return set_user_balance(money)
 
 # 用户充值路由
 @user.route('/charge', methods=['POST'])
 @jwt_required()
 def charge():
+    """
+    处理用户充值请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -209,12 +233,14 @@ def charge():
     # 调用用户充值服务
     return user_charge(username, balance)
 
-
+# 用户反馈路由
 @user.route('/feedback', methods=['POST'])
 @jwt_required()
 def feedback():
+    """
+    处理用户反馈提交请求
+    """
     data = request.form
-    print(data)
     if not data:
         return jsonify({
             'code': -4,
@@ -224,21 +250,23 @@ def feedback():
 
     username = data.get('username')
     content = data.get('content')
-    print(username, content)
     if not username or not content:
         return jsonify({
             'code': -4,
             'message': '用户名和内容是必填项',
             'data': None
         })
-    return feedback_submission(username,content)
+
+    return feedback_submission(username, content)
 
 # 编辑用户个性化设置路由
 @user.route('/personal', methods=['POST'])
 @jwt_required()
 def personal_interface_setting():
+    """
+    处理编辑用户个性化设置请求
+    """
     data = request.form
-    print(f"data={data}")
     if not data:
         return jsonify({
             'code': -4,
@@ -247,23 +275,27 @@ def personal_interface_setting():
         })
 
     upload_folder = 'D:/code/RetrievalSystemBackend/background_image/'
-    response = handle_file_upload(upload_folder,'imgUrl')
+    response = handle_file_upload(upload_folder, 'imgUrl')
     response_data = response.get_json()
     if response_data['code'] == 0:
         background_image = response_data['data']['file_path']
     else:
         background_image = None
+
     username = data.get('username')
     theme = data.get('theme')
     font_style = data.get('font')
 
     # 调用用户信息编辑服务
-    return personal_setting(theme,font_style,background_image)
+    return personal_setting(theme, font_style, background_image)
 
 # 用户下载图片路由
 @user.route('/download', methods=['POST'])
 @jwt_required()
 def download_picture():
+    """
+    处理用户下载图片请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -291,8 +323,10 @@ def download_picture():
 @user.route('/get_feedback_history', methods=['POST'])
 @jwt_required()
 def get_feedback_history():
+    """
+    处理获取用户反馈记录请求
+    """
     data = request.form
-    print(data)
     if not data:
         return jsonify({
             'code': -4,
@@ -301,5 +335,6 @@ def get_feedback_history():
         })
 
     username = data.get('username')
+
     # 调用用户反馈历史记录服务
     return feedback_history(username)

@@ -1,27 +1,25 @@
-from flask_jwt_extended import get_jwt_identity
-from models.backup_record import BackupRecord
-from models.backup_settings import BackupSetting
-from config import db_init as db
-from flask import jsonify
-import datetime
-import os
-import subprocess
-import subprocess
-import os
-import datetime
-from flask import jsonify
-from flask_jwt_extended import get_jwt_identity
-from models.backup_record import BackupRecord
-import os
-import datetime
-import subprocess
-from flask import jsonify
-from flask_jwt_extended import get_jwt_identity
-from models.user import User
-
+from flask_jwt_extended import get_jwt_identity  # 导入 JWT 身份获取方法
+from models.backup_record import BackupRecord  # 导入备份记录模型
+from models.backup_settings import BackupSetting  # 导入备份设置模型
+from models.user import User  # 导入用户模型
+from config import db_init as db  # 导入数据库初始化配置
+from flask import jsonify  # 导入 jsonify 用于返回 JSON 响应
+import os  # 导入 os 模块用于文件操作
+import datetime  # 导入 datetime 模块用于日期操作
+import subprocess  # 导入 subprocess 模块用于执行系统命令
 
 # 获取备份记录服务函数
 def get_record(page=1, per_page=100):
+    """
+    获取备份记录
+
+    参数:
+        page (int): 页码，默认为 1
+        per_page (int): 每页记录数，默认为 100
+
+    返回:
+        JSON 响应: 包含备份记录的 JSON 对象
+    """
     try:
         # 获取当前管理员身份
         admin_id = get_jwt_identity().get('user_id')
@@ -50,30 +48,44 @@ def get_record(page=1, per_page=100):
 
 # 管理员进行数据库备份服务函数
 def create_backup():
+    """
+    进行数据库备份
+
+    返回:
+        JSON 响应: 包含备份结果的 JSON 对象
+    """
     try:
         # 获取当前管理员身份
         admin_id = get_jwt_identity().get('user_id')
-        # 根据管理员查询备份路径
+
+        # 查询管理员的备份设置
         setting = BackupSetting.query.filter_by(admin_id=admin_id).first()
+
+        # 检查是否有备份路径设置
+        if not setting or not setting.backup_path:
+            return jsonify({
+                'code': -2,
+                'message': '备份路径未设置',
+                'data': None
+            })
 
         # 备份文件的路径和文件名
         backup_dir = setting.backup_path
+
         # 检查并创建备份目录
         if not os.path.exists(backup_dir):
             os.makedirs(backup_dir)
 
-        # 使用 os.path.join 构建路径，避免双斜杠问题
+        # 构建备份文件路径
         backup_file = os.path.join(backup_dir, f"backup_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.sql")
-
-        # 抽取文件名
         file_name = os.path.basename(backup_file)
 
-        # MySQL 可执行文件的路径
-        mysqldump_path = r'mysqldump'  # 假设 mysqldump 已经添加到系统路径
+        # MySQL 可执行文件的路径和数据库连接信息
+        mysqldump_path = 'mysqldump'  # 假设 mysqldump 已经添加到系统路径
         username = 'root'  # MySQL 用户名
         password = '110119XPY'  # MySQL 密码
         database_name = 'retrievalsystem'  # 数据库名称
-        host = 'localhost'  # 数据库主机，通常是 localhost
+        host = 'localhost'  # 数据库主机
 
         # mysqldump 导出命令
         command = [
@@ -84,7 +96,6 @@ def create_backup():
             database_name,
             '--result-file', backup_file  # 指定导出的文件路径
         ]
-
 
         # 执行导出命令
         subprocess.run(command, check=True)
@@ -113,7 +124,7 @@ def create_backup():
             'data': None
         })
     except Exception as e:
-        db.session.rollback()
+        db.session.rollback()  # 如果出现其他异常，回滚事务
         print(f"备份失败: {e}")
         return jsonify({
             'code': -1,
