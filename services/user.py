@@ -2,9 +2,6 @@ from datetime import timedelta
 from flask_login import login_user
 from flask_jwt_extended import create_access_token, get_jwt_identity
 from file_download import generate_image, send_image
-from models.user import User
-from flask import jsonify
-from config import db_init as db
 
 # 用户登录函数
 def user_login(username, password):
@@ -54,7 +51,7 @@ def user_register(email, username, nickname, password):
         })
 
     # 创建新的用户对象
-    new_user = User(email=email, username=username, nickname = nickname, password=password,delete_flag=0)
+    new_user = User(email=email, username=username, nickname=nickname, password=password, delete_flag=0)
 
     try:
         db.session.add(new_user)  # 添加新用户到数据库会话
@@ -222,10 +219,26 @@ def set_user_balance(money):
             'data': str(e)
         })
 
+from flask import request, jsonify
+from config import db_init as db, alipay
+from models.user import User
+import time
+from alipay.aop.api.domain.AlipayTradePagePayModel import AlipayTradePagePayModel
+from alipay.aop.api.request.AlipayTradePagePayRequest import AlipayTradePagePayRequest
+
 # 用户充值函数
 def user_charge(username, balance):
+    # 检查是否获取到所有必要的参数
+    if not username or not balance:
+        return jsonify({
+            'code': -1,
+            'message': '缺少必要的参数',
+            'data': None
+        })
+
     try:
         balance = float(balance)  # 将 balance 转换为浮点数
+        balance = round(balance, 2)  # 保证金额精确到小数点后两位
     except ValueError:
         return jsonify({
             'code': -1,
@@ -237,7 +250,7 @@ def user_charge(username, balance):
     if balance <= 0:
         return jsonify({
             'code': -2,
-            'message': '余额必须大于零',
+            'message': '充值金额必须大于零',
             'data': None
         })
 
@@ -250,23 +263,37 @@ def user_charge(username, balance):
             'data': None
         })
 
-    u.balance += balance  # 增加用户的余额
-
+    # 生成唯一订单号
+    out_trade_no = f"order_{u.id}_{int(time.time())}"
+    print(out_trade_no)
+    # 创建支付请求
     try:
-        db.session.commit()  # 提交数据库会话
-        return jsonify({
-            'code': 0,
-            'message': '充值成功',
-            'data': u.to_dict()
-        })
+        # 使用 api_alipay_trade_page_pay 方法创建订单
+        order_string = alipay.api_alipay_trade_page_pay(
+            out_trade_no=out_trade_no,  # 订单号
+            total_amount=str(balance),  # 支付金额，必须是字符串格式，精确到小数点后两位
+            subject="账户充值",  # 支付标题
+            return_url="https://example.com/return",  # 支付成功后的回调地址
+            notify_url="https://example.com/alipay/notify"  # 支付完成后的通知回调地址
+        )
+
+        # 构建支付链接
+        alipay_url = 'https://openapi-sandbox.dl.alipaydev.com/gateway.do?' + order_string
+
     except Exception as e:
-        db.session.rollback()  # 回滚数据库会话
-        print(f"更新用户余额失败，数据库操作错误：{e}")
         return jsonify({
             'code': -4,
-            'message': '余额更新失败',
+            'message': f'生成支付订单失败：{str(e)}',
             'data': None
         })
+
+    return jsonify({
+        'code': 0,
+        'message': '生成支付订单成功',
+        'data': {
+            'alipay_url': alipay_url
+        }
+    })
 
 # 用户下载图片函数
 def user_download_picture(filename, format, resolution):

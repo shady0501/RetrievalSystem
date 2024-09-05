@@ -9,7 +9,7 @@ def get_faq_list(page, per_page):
         faq_list = [faq.to_dict() for faq in faqs.items]
 
         return jsonify({
-            'code': '0',
+            'code': 0,
             'message': '获取FAQ列表成功',
             'data': faq_list,
             'total': faqs.total,  # 总条目数
