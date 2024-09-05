@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required
 from services.user import user_login, user_register, user_edit, user_delete, user_charge, user_download_picture
 from services.feedback_suggestion import feedback_submission, feedback_history
 from file_upload import handle_file_upload
