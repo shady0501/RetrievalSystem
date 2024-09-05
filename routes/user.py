@@ -238,6 +238,7 @@ def feedback():
 @jwt_required()
 def personal_interface_setting():
     data = request.form
+    print(f"data={data}")
     if not data:
         return jsonify({
             'code': -4,
@@ -246,7 +247,7 @@ def personal_interface_setting():
         })
 
     upload_folder = 'D:/code/RetrievalSystemBackend/background_image/'
-    response = handle_file_upload(upload_folder,'background_image')
+    response = handle_file_upload(upload_folder,'imgUrl')
     response_data = response.get_json()
     if response_data['code'] == 0:
         background_image = response_data['data']['file_path']
@@ -254,18 +255,10 @@ def personal_interface_setting():
         background_image = None
     username = data.get('username')
     theme = data.get('theme')
-    font_style = data.get('font_style')
-
-    # 用户名是必填字段
-    if not username:
-        return jsonify({
-            'code': -4,
-            'message': '用户名为必填项',
-            'data': None
-        })
+    font_style = data.get('font')
 
     # 调用用户信息编辑服务
-    return personal_setting(username,theme,font_style,background_image)
+    return personal_setting(theme,font_style,background_image)
 
 # 用户下载图片路由
 @user.route('/download', methods=['POST'])

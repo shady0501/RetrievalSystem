@@ -11,7 +11,7 @@ from models.text import Text
 from config import db_init as db
 import requests
 
-UPLOAD_FOLDER = 'D:\\code\\RetrievalSystemBackend\\pictures'  # 文件保存的文件夹
+UPLOAD_FOLDER = 'D:\code\RetrievalSystemBackend\pictures'  # 文件保存的文件夹
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 确保上传文件夹存在
 
 
@@ -29,7 +29,7 @@ def read_and_encode_image(image_path):
 def text_search(keywords):
     try:
         # 调用大模型接口，假设接口返回包含图片路径或错误信息的字典
-        response = requests.post('http://192.168.180.228:5000/searchfor/image', json={'keywords': keywords}, timeout=10)
+        response = requests.post('http://172.20.10.13:5000/searchfor/image', json={'keywords': keywords})
         response_data = response.json()
         code = response_data.get('code')
 
@@ -45,7 +45,7 @@ def text_search(keywords):
             return jsonify({'code': -1, 'message': '未知错误', 'data': None})
     except Exception as e:
         print(f"调用大模型接口失败: {e}")
-        return jsonify({'code': -1, 'message': '调用大模型接口失败', 'data': None})
+        return jsonify({'code': -1, 'message': '正在响应，请稍等', 'data': None})
 
     # 批量查询数据库，获取所有相关图片信息
     images = Image.query.filter(Image.path.in_([os.path.join(UPLOAD_FOLDER, path) for path in image_paths])).all()
@@ -95,7 +95,7 @@ def image_search(image_file):
     # 调用大模型接口，传递文件路径
     try:
         response = requests.post(
-            'http://192.168.180.228:5000/searchfor/text',
+            'http://172.20.10.13:5000/searchfor/text',
             json={'keywords': file_path}
         )
         response_data = response.json()
