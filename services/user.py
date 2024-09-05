@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask_login import login_user
 from flask_jwt_extended import create_access_token, get_jwt_identity
 from file_download import generate_image, send_image
@@ -26,7 +27,7 @@ def user_login(username, password):
 
     u_dict = u.to_dict()  # 将用户对象转换为字典
     # 创建JWT访问令牌
-    access_token = create_access_token(identity={'username': u.username, 'user_id': u.id})
+    access_token = create_access_token(identity={'username': u.username, 'user_id': u.id},expires_delta=timedelta(hours=1))
     return jsonify({
         'code': 0,
         'message': '登录成功',
@@ -170,8 +171,8 @@ def user_delete(username, password):
 
 # 获取用户余额函数
 def get_user_balance():
-    current_user = get_jwt_identity()
-    u = User.query.filter_by(id=1, delete_flag=0).first()
+    current_user_id = get_jwt_identity().get('user_id') # 获取当前用户ID
+    u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
@@ -186,8 +187,8 @@ def get_user_balance():
 
 # 更改用户余额函数
 def set_user_balance(money):
-    current_user = get_jwt_identity()
-    u = User.query.filter_by(id=1, delete_flag=0).first()
+    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
+    u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,

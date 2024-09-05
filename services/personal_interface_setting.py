@@ -1,11 +1,13 @@
+from flask_jwt_extended import get_jwt_identity
 from models.user import User
 from models.personal_interface_setting import PersonalizedInterfaceSetting
 from flask import jsonify
 from config import db_init as db
 
 # 用户个性化设置功能
-def personal_setting(username,theme,font_style,background_image):
-    u = User.query.filter_by(username=username).first()
+def personal_setting(theme,font_style,background_image):
+    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
+    u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
 
     if theme is None and font_style is None and background_image is None:
         return jsonify({
@@ -17,7 +19,7 @@ def personal_setting(username,theme,font_style,background_image):
     user_id = u.id
 
     s = PersonalizedInterfaceSetting.query.filter_by(user_id=user_id).first()
-    print(s)
+
     # 如果不是第一次存储此用户个性化设置，仅更新
     if s is not None:
         updated = False  # 标记是否有字段更新

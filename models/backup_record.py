@@ -6,13 +6,13 @@ with app.app_context():
 
 # 定义系统备份记录模型类
 class BackupRecord(db.Model):
-    __table__ = db.metadata.tables['backup_record']
+    __table__ = db.metadata.tables['backuprecord']
 
     # 定义一个方法，将BackupRecord对象转换为字典格式，以便在API响应中使用
     def to_dict(self):
         return {
             'id': self.id,  # 备份记录ID
-            'backup_id': self.backup_id,  # 关联的备份设置ID
+            'admin_id': self.admin_id,  # 关联的管理员ID
             'backup_date': self.backup_date,  # 备份时间
-            'backup_status': self.backup_status,  # 备份状态，例如“成功”或“失败”
+            'backup_filename': self.backup_filename,  # 备份文件名
         }
