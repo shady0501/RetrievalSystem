@@ -1,3 +1,7 @@
+import uuid
+from flask import Blueprint, request, jsonify, redirect, url_for
+from flask_login import login_required
+from services.user import user_login, user_register, user_edit, user_delete, get_user_balance, set_user_balance, user_charge, user_download_picture
 from flask import Blueprint, request, jsonify
 from services.user import user_login, user_register, user_edit, user_delete, user_charge, user_download_picture
 from services.feedback_suggestion import feedback_submission, feedback_history
@@ -59,6 +63,32 @@ def register():
 
     # 调用用户注册服务
     return user_register(email, username, nickname, password)
+
+# 用户重置密码路由
+@user.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.form
+
+    if not data:
+        return jsonify({
+            'code': -4,
+            'message': '无效输入',
+            'data': None
+        })
+
+    username = data.get('username')
+    password = data.get('password')
+
+    # 用户名是必填字段
+    if not username:
+        return jsonify({
+            'code': -4,
+            'message': '用户名为必填项',
+            'data': None
+        })
+
+    # 调用用户信息编辑服务
+    return user_edit(None, username, password, None, None, None, None, None)
 
 # 编辑用户信息路由
 @user.route('/edit', methods=['POST'])
@@ -126,6 +156,32 @@ def delete():
 
     # 调用用户删除服务
     return user_delete(username, password)
+
+# 获取用户余额路由
+@user.route('/get_user_balance', methods=['GET'])
+@jwt_required()
+def get_balance():
+    return get_user_balance()
+
+# 更改用户余额路由
+@user.route('/set_user_balance', methods=['POST'])
+@jwt_required()
+def set_balance():
+    data = request.form
+    if not data:
+        return jsonify({
+            'code': -4,
+            'message': '无效输入',
+            'data': None
+        })
+    money = data.get('money')
+    if money is None or float(money) < 0:
+        return jsonify({
+            'code': -6,
+            'message': '扣款金额非法',
+            'data': None
+        })
+    return set_user_balance(money)
 
 # 用户充值路由
 @user.route('/charge', methods=['POST'])

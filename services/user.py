@@ -72,7 +72,6 @@ def user_register(email, username, nickname, password):
 
 # 用户信息编辑函数
 def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
-    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -167,6 +166,59 @@ def user_delete(username, password):
             'data': None
         })
 
+# 获取用户余额函数
+def get_user_balance():
+    current_user = get_jwt_identity()
+    u = User.query.filter_by(id=1, delete_flag=0).first()
+    if not u:
+        return jsonify({
+            'code': -1,
+            'message': '用户不存在',
+            'data': None
+        })
+    return jsonify({
+        'code': 0,
+        'message': '用户余额获取成功',
+        'data': u.to_dict().get('balance')
+    })
+
+# 更改用户余额函数
+def set_user_balance(money):
+    current_user = get_jwt_identity()
+    u = User.query.filter_by(id=1, delete_flag=0).first()
+    if not u:
+        return jsonify({
+            'code': -1,
+            'message': '用户不存在',
+            'data': None
+        })
+    user_balance = u.to_dict().get('balance',0)
+    if  float(user_balance) < float(money):
+        return jsonify({
+            'code': -9,
+            'message': '用户余额不足',
+            'data': None
+        })
+    # 扣除余额
+    u.balance = user_balance - money
+
+    try:
+        # 提交更改到数据库
+        db.session.commit()
+        return jsonify({
+            'code': 0,
+            'message': '余额扣除成功',
+            'data': u.to_dict().get('balance')
+        })
+    except Exception as e:
+        # 如果发生错误，回滚更改
+        db.session.rollback()
+        return jsonify({
+            'code': -10,
+            'message': '数据库更新失败',
+            'data': str(e)
+        })
+
 from flask import request, jsonify
 from config import db_init as db, alipay
 from models.user import User
@@ -254,3 +306,4 @@ def user_download_picture(filename, format, resolution):
 
     # 使用发送图片的函数
     return send_image(new_filepath, new_filename)
+
