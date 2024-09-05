@@ -1,10 +1,20 @@
-from models.faq import FAQ
-from flask import jsonify
+from models.faq import FAQ  # 导入 FAQ 模型
+from flask import jsonify  # 导入 jsonify 用于返回 JSON 响应
 
-# 获取FAQ列表服务函数
+# 获取 FAQ 列表服务函数
 def get_faq_list(page, per_page):
+    """
+    获取 FAQ 列表
+
+    参数:
+        page (int): 当前页码
+        per_page (int): 每页显示的 FAQ 数量
+
+    返回:
+        JSON 响应: 包含 FAQ 列表的 JSON 对象
+    """
     try:
-        # 查询FAQ表数据并进行分页
+        # 查询 FAQ 表数据并进行分页
         faqs = FAQ.query.paginate(page=page, per_page=per_page, error_out=False)
         faq_list = [faq.to_dict() for faq in faqs.items]
 
@@ -18,4 +28,8 @@ def get_faq_list(page, per_page):
         })
     except Exception as e:
         print(f"获取FAQ列表失败: {e}")
-        return jsonify({'code': -1, 'message': '获取FAQ列表失败', 'data': None})
+        return jsonify({
+            'code': -1,
+            'message': '获取FAQ列表失败',
+            'data': None
+        })

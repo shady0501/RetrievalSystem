@@ -1,7 +1,7 @@
-import os
-import time
-from flask import request, jsonify, current_app
-from PIL import Image
+import os  # 导入 os 模块用于文件操作
+import time  # 导入 time 模块用于时间戳生成
+from flask import request, jsonify  # 导入 Flask 模块用于处理请求和生成响应
+from PIL import Image  # 导入 PIL 库用于图片处理
 
 # 配置用户上传文件夹和允许的文件类型
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片类型
@@ -9,10 +9,29 @@ MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2MB 最大上传文件大小
 
 # 检查文件是否符合允许的扩展名格式
 def allowed_file(filename):
+    """
+    检查文件是否符合允许的扩展名格式
+
+    参数:
+        filename (str): 文件名
+
+    返回:
+        bool: 如果文件扩展名被允许则返回 True，否则返回 False
+    """
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # 保存上传的文件并处理图片（如调整大小）
 def save_and_process_file(file, upload_folder):
+    """
+    保存上传的文件并处理图片（如调整大小）
+
+    参数:
+        file (FileStorage): 上传的文件对象
+        upload_folder (str): 上传文件保存的文件夹路径
+
+    返回:
+        str: 保存处理后的图片文件路径，如果文件类型不允许则返回 None
+    """
     if file and allowed_file(file.filename):
         # 生成带时间戳的文件名，并保留原始文件扩展名
         extension = file.filename.rsplit('.', 1)[1].lower()
@@ -24,20 +43,40 @@ def save_and_process_file(file, upload_folder):
         file.save(file_path)
 
         # 打开图片进行处理，例如调整大小
-        with Image.open(file_path) as img:
-            img = img.resize((200, 200))  # 将图片调整为 200x200 像素
-            img.save(file_path)  # 保存处理后的图片
+        try:
+            with Image.open(file_path) as img:
+                img = img.resize((200, 200))  # 将图片调整为 200x200 像素
+                img.save(file_path)  # 保存处理后的图片
+        except Exception as e:
+            print(f"图片处理失败：{e}")
+            return None
 
         return file_path
     return None
 
 # 确保上传文件的目录存在，如果不存在则创建该目录
 def ensure_upload_folder_exists(upload_folder):
+    """
+    确保上传文件的目录存在，如果不存在则创建该目录
+
+    参数:
+        upload_folder (str): 上传文件保存的文件夹路径
+    """
     if not os.path.exists(upload_folder):
         os.makedirs(upload_folder)
 
 # 处理文件上传的主函数，用于在 Flask 路由中调用
-def handle_file_upload(upload_folder,file_field_name):
+def handle_file_upload(upload_folder, file_field_name):
+    """
+    处理文件上传的主函数，用于在 Flask 路由中调用
+
+    参数:
+        upload_folder (str): 上传文件保存的文件夹路径
+        file_field_name (str): 表单中文件字段的名称
+
+    返回:
+        JSON 响应: 包含上传结果的 JSON 对象
+    """
     # 确保上传文件夹存在
     ensure_upload_folder_exists(upload_folder)
 
@@ -62,8 +101,6 @@ def handle_file_upload(upload_folder,file_field_name):
 
     # 保存并处理图片
     file_path = save_and_process_file(file, upload_folder)
-    current_directory = os.getcwd()
-    print(f"当前工作目录: {current_directory}")
     if file_path:
         return jsonify({
             'code': 0,
@@ -73,6 +110,6 @@ def handle_file_upload(upload_folder,file_field_name):
     else:
         return jsonify({
             'code': -3,
-            "message": "不允许的文件类型",
+            "message": "不允许的文件类型或图片处理失败",
             "data": None
         })

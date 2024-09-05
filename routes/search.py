@@ -1,8 +1,6 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
-
-from services.search import text_search
-from services.search import image_search
+from flask import Blueprint, request, jsonify  # 导入 Flask Blueprint、request 和 jsonify
+from flask_jwt_extended import jwt_required  # 导入 JWT 认证所需的装饰器
+from services.search import text_search, image_search  # 导入文本和图片检索服务
 
 # 创建搜索蓝图，用于处理与搜索相关的路由
 search = Blueprint('search', __name__)
@@ -11,6 +9,9 @@ search = Blueprint('search', __name__)
 @search.route('/text', methods=['POST'])
 @jwt_required()
 def search_text():
+    """
+    处理文本检索的请求
+    """
     data = request.form
     if not data:
         return jsonify({
@@ -36,6 +37,9 @@ def search_text():
 @search.route('/image', methods=['POST'])
 @jwt_required()
 def search_image():
+    """
+    处理图片检索的请求
+    """
     if 'image_file' not in request.files:
         return jsonify({
             'code': -4,

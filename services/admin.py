@@ -1,10 +1,26 @@
-from datetime import datetime
-from models.user import User
-from flask import jsonify
-from config import db_init as db
+from datetime import datetime  # 导入 datetime 模块，用于日期处理
+from models.user import User  # 导入 User 模型
+from flask import jsonify  # 导入 jsonify 用于返回 JSON 响应
+from config import db_init as db  # 导入数据库初始化配置
+
 
 # 管理员修改用户信息函数
 def admin_edit_user_info(username, password, email, nickname, birthday, sex, description):
+    """
+    修改用户信息
+
+    参数:
+        username (str): 用户名
+        password (str): 密码
+        email (str): 邮箱
+        nickname (str): 昵称
+        birthday (str): 生日
+        sex (str): 性别
+        description (str): 描述
+
+    返回:
+        JSON 响应: 包含操作结果的 JSON 对象
+    """
     # 查询用户是否存在且未被删除
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -13,11 +29,12 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
             'message': '用户不存在',
             'data': None
         })
-    print(birthday)
+
+    # 处理生日日期格式
     if birthday:
         try:
-            # 尝试使用第一种格式解析日期
             try:
+                # 尝试使用第一种格式解析日期
                 date_obj = datetime.strptime(birthday, '%Y-%m-%d')
             except ValueError:
                 # 如果第一种格式失败，尝试使用第二种格式
@@ -78,8 +95,18 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
             'data': None
         })
 
+
 # 管理员注销用户账号函数
 def admin_delete_user(username):
+    """
+    注销用户账号
+
+    参数:
+        username (str): 用户名
+
+    返回:
+        JSON 响应: 包含操作结果的 JSON 对象
+    """
     # 查询用户是否存在且未被删除
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -111,6 +138,12 @@ def admin_delete_user(username):
 
 # 管理员获取用户数据函数
 def admin_get_user_info():
+    """
+    获取所有未被删除的用户信息
+
+    返回:
+        JSON 响应: 包含操作结果的 JSON 对象
+    """
     # 获取未被删除的用户信息
     users = User.query.filter_by(delete_flag=0).all()
 
@@ -120,6 +153,7 @@ def admin_get_user_info():
             'message': '无用户数据',
             'data': ""
         })
+
     # 将每个用户对象转换为字典，并存入列表
     user_data = [user.to_dict() for user in users]
 
@@ -128,4 +162,3 @@ def admin_get_user_info():
         'message': '管理员获取用户数据成功',
         'data': user_data
     })
-

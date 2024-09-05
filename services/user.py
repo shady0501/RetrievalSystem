@@ -1,10 +1,25 @@
-from datetime import timedelta
-from flask_login import login_user
-from flask_jwt_extended import create_access_token, get_jwt_identity
-from file_download import generate_image, send_image
+from datetime import timedelta  # 导入 timedelta 用于设置 token 过期时间
+from flask import jsonify, request  # 导入 jsonify 用于返回 JSON 响应, request 用于获取请求数据
+from flask_jwt_extended import create_access_token, get_jwt_identity  # 导入 JWT 相关方法
+from config import db_init as db
+
+from models.user import User  # 导入 User 模型
+import time  # 导入 time 用于生成订单号
+from file_download import generate_image, send_image  # 导入图片生成和发送函数
+
 
 # 用户登录函数
 def user_login(username, password):
+    """
+    用户登录
+
+    参数:
+        username (str): 用户名
+        password (str): 密码
+
+    返回:
+        JSON 响应: 包含登录结果和 JWT 令牌的 JSON 对象
+    """
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -24,7 +39,9 @@ def user_login(username, password):
 
     u_dict = u.to_dict()  # 将用户对象转换为字典
     # 创建JWT访问令牌
-    access_token = create_access_token(identity={'username': u.username, 'user_id': u.id},expires_delta=timedelta(hours=1))
+    access_token = create_access_token(identity={'username': u.username, 'user_id': u.id},
+                                       expires_delta=timedelta(hours=1))
+
     return jsonify({
         'code': 0,
         'message': '登录成功',
@@ -32,8 +49,21 @@ def user_login(username, password):
         'data': u_dict
     })
 
+
 # 用户注册函数
 def user_register(email, username, nickname, password):
+    """
+    用户注册
+
+    参数:
+        email (str): 用户邮箱
+        username (str): 用户名
+        nickname (str): 用户昵称
+        password (str): 用户密码
+
+    返回:
+        JSON 响应: 包含注册结果的 JSON 对象
+    """
     # 检查用户名是否已存在
     if User.query.filter_by(username=username, delete_flag=0).first():
         return jsonify({
@@ -70,8 +100,25 @@ def user_register(email, username, nickname, password):
             'data': None
         })
 
+
 # 用户信息编辑函数
 def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
+    """
+    编辑用户信息
+
+    参数:
+        email (str): 新的用户邮箱
+        username (str): 用户名
+        password (str): 新的用户密码
+        avatar (str): 新的用户头像
+        nickname (str): 新的用户昵称
+        sex (str): 新的用户性别
+        birthday (str): 新的用户生日
+        description (str): 新的用户描述
+
+    返回:
+        JSON 响应: 包含编辑结果的 JSON 对象
+    """
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -130,8 +177,19 @@ def user_edit(email, username, password, avatar, nickname, sex, birthday, descri
             'data': None
         })
 
+
 # 用户删除函数
 def user_delete(username, password):
+    """
+    删除用户
+
+    参数:
+        username (str): 用户名
+        password (str): 用户密码
+
+    返回:
+        JSON 响应: 包含删除结果的 JSON 对象
+    """
     # 查询用户是否存在
     u = User.query.filter_by(username=username, delete_flag=0).first()
     if not u:
@@ -166,9 +224,16 @@ def user_delete(username, password):
             'data': None
         })
 
+
 # 获取用户余额函数
 def get_user_balance():
-    current_user_id = get_jwt_identity().get('user_id') # 获取当前用户ID
+    """
+    获取用户余额
+
+    返回:
+        JSON 响应: 包含用户余额的 JSON 对象
+    """
+    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
     u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
     if not u:
         return jsonify({
@@ -182,8 +247,18 @@ def get_user_balance():
         'data': u.to_dict().get('balance')
     })
 
+
 # 更改用户余额函数
 def set_user_balance(money):
+    """
+    更改用户余额
+
+    参数:
+        money (float): 要扣除的金额
+
+    返回:
+        JSON 响应: 包含更改余额结果的 JSON 对象
+    """
     current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
     u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
     if not u:
@@ -192,8 +267,8 @@ def set_user_balance(money):
             'message': '用户不存在',
             'data': None
         })
-    user_balance = u.to_dict().get('balance',0)
-    if  float(user_balance) < float(money):
+    user_balance = u.to_dict().get('balance', 0)
+    if float(user_balance) < float(money):
         return jsonify({
             'code': -9,
             'message': '用户余额不足',
@@ -219,15 +294,19 @@ def set_user_balance(money):
             'data': str(e)
         })
 
-from flask import request, jsonify
-from config import db_init as db, alipay
-from models.user import User
-import time
-from alipay.aop.api.domain.AlipayTradePagePayModel import AlipayTradePagePayModel
-from alipay.aop.api.request.AlipayTradePagePayRequest import AlipayTradePagePayRequest
 
 # 用户充值函数
 def user_charge(username, balance):
+    """
+    用户充值
+
+    参数:
+        username (str): 用户名
+        balance (float): 充值金额
+
+    返回:
+        JSON 响应: 包含充值结果的 JSON 对象
+    """
     # 检查是否获取到所有必要的参数
     if not username or not balance:
         return jsonify({
@@ -266,6 +345,7 @@ def user_charge(username, balance):
     # 生成唯一订单号
     out_trade_no = f"order_{u.id}_{int(time.time())}"
     print(out_trade_no)
+
     # 创建支付请求
     try:
         # 使用 api_alipay_trade_page_pay 方法创建订单
@@ -295,8 +375,20 @@ def user_charge(username, balance):
         }
     })
 
+
 # 用户下载图片函数
 def user_download_picture(filename, format, resolution):
+    """
+    用户下载图片
+
+    参数:
+        filename (str): 图片文件名
+        format (str): 图片格式
+        resolution (str): 图片分辨率
+
+    返回:
+        图片文件: 发送图片文件作为响应
+    """
     # 从请求中获取参数
     base_image_path = 'D:/code/RetrievalSystemBackend/return_image/'
     temp_image_path = 'D:/code/RetrievalSystemBackend/return_image/'
@@ -306,4 +398,3 @@ def user_download_picture(filename, format, resolution):
 
     # 使用发送图片的函数
     return send_image(new_filepath, new_filename)
-
