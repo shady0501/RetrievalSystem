@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="备份记录表、获取用户余额、更改用户余额等实现">
+    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="添加用户重置密码功能">
+      <change afterPath="$PROJECT_DIR$/services/backup_record.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/backup_settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/backup_record.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/backup_record.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/personal_interface_setting.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/personal_interface_setting.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/user.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,25 +67,73 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Flask 服务器.RetrievalSystemBackend.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flask 服务器.RetrievalSystemBackend.executor": "Run",
+    "Python.ali.executor": "Run",
+    "Python.alipaydemo.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\code\RetrievalSystemBackend\routes" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Flask 服务器.RetrievalSystemBackend">
+    <configuration name="ali" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="RetrievalSystemBackend" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ali.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="alipaydemo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="RetrievalSystemBackend" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/alipaydemo.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="RetrievalSystemBackend" type="Python.FlaskServer">
       <option name="additionalOptions" value="--host=0.0.0.0 --port=8000" />
       <option name="flaskDebug" value="true" />
@@ -99,6 +153,12 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.alipaydemo" />
+        <item itemvalue="Python.ali" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -119,7 +179,9 @@
       <workItem from="1724921101524" duration="139000" />
       <workItem from="1724921246084" duration="20933000" />
       <workItem from="1724998996269" duration="88457000" />
-      <workItem from="1725357573045" duration="16348000" />
+      <workItem from="1725357573045" duration="28722000" />
+      <workItem from="1725434102338" duration="1797000" />
+      <workItem from="1725435919314" duration="24380000" />
     </task>
     <task id="LOCAL-00001" summary="用户增删改功能">
       <option name="closed" value="true" />
@@ -249,7 +311,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725367289433</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="调用支付宝充值接口部分">
+      <option name="closed" value="true" />
+      <created>1725415971625</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1725415971625</updated>
+    </task>
+    <task id="LOCAL-00018" summary="添加用户重置密码功能">
+      <option name="closed" value="true" />
+      <created>1725417450578</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1725417450578</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -294,9 +372,13 @@
     <MESSAGE value="更改用户生日必须校验问题" />
     <MESSAGE value="联调管理员修改用户信息，管理员删除用户更改代码" />
     <MESSAGE value="备份记录表、获取用户余额、更改用户余额等实现" />
-    <option name="LAST_COMMIT_MESSAGE" value="备份记录表、获取用户余额、更改用户余额等实现" />
+    <MESSAGE value="调用支付宝充值接口部分" />
+    <MESSAGE value="添加用户重置密码功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加用户重置密码功能" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1725371169679" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$ali.coverage" NAME="ali 覆盖结果" MODIFIED="1725503303211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$alipaydemo.coverage" NAME="alipaydemo 覆盖结果" MODIFIED="1725505334649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1725506199458" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
