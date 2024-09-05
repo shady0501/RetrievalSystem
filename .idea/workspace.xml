@@ -82,7 +82,7 @@
       <recent name="D:\code\RetrievalSystemBackend\routes" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.turn_sql">
+  <component name="RunManager" selected="Flask 服务器.RetrievalSystemBackend">
     <configuration name="turn_sql" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RetrievalSystemBackend" />
       <option name="ENV_FILES" value="" />
