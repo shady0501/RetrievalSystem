@@ -156,7 +156,7 @@ def get_user_search_history(search_history_id):
                         'resolution': image.resolution,
                         'image_data': img_base64
                     })
-
+        image_out = [image["image_data"] for image in image_list]
         # 打印 image_list
         print(image_list)
 
@@ -165,7 +165,8 @@ def get_user_search_history(search_history_id):
             'message': '获取检索历史记录成功',
             'data': {
                 'search_text': history_dict['search_text'],
-                'images': image_list
+                'date': history_dict['date'],
+                'images': image_out
             }
         })
 

@@ -59,6 +59,7 @@ def register():
     username = data.get('username')
     nickname = data.get('nickname')
     password = data.get('password')
+    permission_level = data.get('permission_level')
 
     # 检查必填字段
     if not email or not username or not password or not nickname:
@@ -69,7 +70,7 @@ def register():
         })
 
     # 调用用户注册服务
-    return user_register(email, username, nickname, password)
+    return user_register(email, username, nickname, password, permission_level)
 
 # 用户重置密码路由
 @user.route('/reset_password', methods=['POST'])
@@ -129,14 +130,6 @@ def edit():
     sex = data.get('sex')
     birthday = data.get('birthday')
     description = data.get('description')
-
-    # 用户名是必填字段
-    if not username:
-        return jsonify({
-            'code': -4,
-            'message': '用户名为必填项',
-            'data': None
-        })
 
     # 调用用户信息编辑服务
     return user_edit(email, username, password, avatar, nickname, sex, birthday, description)

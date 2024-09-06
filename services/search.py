@@ -70,10 +70,12 @@ def text_search(keywords):
     # 批量查询数据库，获取所有相关图片信息
     images = Image.query.filter(Image.path.in_([os.path.join(UPLOAD_FOLDER, path) for path in image_paths])).all()
 
+    # 使用字典按 path 去重，确保每个图片路径只保存一次
+    unique_images = list({image.path: image for image in images}.values())
     # 使用线程池并行处理图片读取和编码
     image_list = []
     with ThreadPoolExecutor() as executor:
-        futures = {executor.submit(read_and_encode_image, image.path): image for image in images}
+        futures = {executor.submit(read_and_encode_image, image.path): image for image in unique_images}
         for future in futures:
             image = futures[future]
             img_base64 = future.result()
