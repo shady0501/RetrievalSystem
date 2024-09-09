@@ -4,7 +4,7 @@ from flask_login import login_required  # 导入 Flask-Login 的 login_required 
 from flask_jwt_extended import jwt_required  # 导入 JWT 认证所需的装饰器
 from services.user import (
     user_login, user_register, user_edit, user_delete,
-    get_user_balance, set_user_balance, user_charge, user_download_picture
+    get_user_balance, set_user_balance, user_charge, user_download_picture, user_dialog
 )  # 导入用户相关服务
 from services.feedback_suggestion import feedback_submission, feedback_history  # 导入反馈建议相关服务
 from file_upload import handle_file_upload  # 导入文件上传处理函数
@@ -281,6 +281,34 @@ def personal_interface_setting():
 
     # 调用用户信息编辑服务
     return personal_setting(theme, font_style, background_image)
+
+# 用户对话路由
+@user.route('/dialog', methods=['POST'])
+@jwt_required()
+def dialog():
+    """
+    处理用户对话请求
+    """
+    data = request.form
+    if not data:
+        return jsonify({
+            'code': -4,
+            'message': '无效输入',
+            'data': None
+        })
+
+    content = data.get('content')
+
+    # 检查必填字段
+    if not content:
+        return jsonify({
+            'code': -4,
+            'message': '搜索文本为必填项',
+            'data': None
+        })
+
+    # 调用用户对话服务
+    return user_dialog(content)
 
 # 用户下载图片路由
 @user.route('/download', methods=['POST'])
