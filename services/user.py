@@ -3,6 +3,9 @@ from flask import jsonify, request  # 导入 jsonify 用于返回 JSON 响应, r
 from flask_jwt_extended import create_access_token, get_jwt_identity  # 导入 JWT 相关方法
 from config import db_init as db
 import hashlib
+from zhipuai import ZhipuAI # 导入ZhipuAI用于用户对话
+from datetime import datetime  # 导入 datetime 用于时间处理
+from models.search_history import SearchHistory
 from models.user import User  # 导入 User 模型
 import time  # 导入 time 用于生成订单号
 from file_download import generate_image, send_image  # 导入图片生成和发送函数
@@ -353,6 +356,40 @@ def user_charge(username, balance):
         'data': None
     })
 
+# 用户对话函数
+def user_dialog(content):
+    client = ZhipuAI(api_key="b8700985ecb3c6e4f1a0fb5b242400a6.5IrNvh1kcywfQnYr")  # 请填写您自己的APIKey
+    response = client.chat.completions.create(
+        model="glm-4-0520",  # 填写需要调用的模型编码
+        messages=[
+            {"role": "user", "content": content},
+        ],
+        stream=True,
+    )
+
+    full_response = ""  # 初始化空字符串来拼接所有content
+    for chunk in response:
+        full_response += chunk.choices[0].delta.content  # 累加拼接content
+
+    print(full_response)
+
+    # 记录检索历史
+    current_user_id = get_jwt_identity().get('user_id')
+    new_history = SearchHistory(
+        user_id=int(current_user_id),
+        date=datetime.now(),
+        search_type=2,
+        search_text=content,
+        search_pictur=full_response,
+    )
+    db.session.add(new_history)
+    db.session.commit()
+
+    return jsonify({
+        'code': 0,
+        'message': full_response,
+        'data': None
+    })
 
 # 用户下载图片函数
 def user_download_picture(filename, format, resolution):
