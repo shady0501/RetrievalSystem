@@ -34,7 +34,6 @@ def get_setting():
             'data': setting_dict,
         })
     except Exception as e:
-        print(f"获取备份设置失败: {e}")
         return jsonify({
             'code': -1,
             'message': '获取备份设置失败',
@@ -84,7 +83,6 @@ def set_setting(backup_frequency, backup_path):
 
     except Exception as e:
         db.session.rollback()  # 如果出现错误，回滚事务
-        print(f"更改备份设置失败: {e}")
         return jsonify({
             'code': -1,
             'message': '更改备份设置失败',

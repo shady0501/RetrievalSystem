@@ -72,7 +72,6 @@ def personal_setting(theme, font_style, background_image):
             })
         except Exception as e:
             db.session.rollback()  # 回滚数据库会话
-            print(f"更新用户个性化设置失败，数据库操作错误：{e}")
             return jsonify({
                 'code': -3,
                 'message': '个性化设置更新失败',
@@ -97,7 +96,6 @@ def personal_setting(theme, font_style, background_image):
             })
         except Exception as e:
             db.session.rollback()  # 出现异常时回滚事务
-            print(f"用户个性化设置数据库插入失败：{e}")
             return jsonify({
                 'code': -3,
                 "message": "用户个性化设置失败，请重试",

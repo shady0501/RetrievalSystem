@@ -27,7 +27,6 @@ def get_faq_list(page, per_page):
             'current_page': faqs.page  # 当前页码
         })
     except Exception as e:
-        print(f"获取FAQ列表失败: {e}")
         return jsonify({
             'code': -1,
             'message': '获取FAQ列表失败',

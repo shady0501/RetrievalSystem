@@ -15,7 +15,7 @@ def edit_user_info():
     处理管理员修改用户信息的请求
     """
     data = request.form
-    print(data)
+
     if not data:
         return jsonify({
             'code': -3,

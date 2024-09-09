@@ -1,13 +1,11 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
-
 from models.image import Image
 from models.search_history import SearchHistory
 from flask import jsonify
 from config import db_init as db
 from datetime import datetime
 import json
-
 from services.search import UPLOAD_FOLDER, read_and_encode_image
 
 
@@ -60,7 +58,6 @@ def record_search_history(user_id, search_type, search_text_list, search_pictur_
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"记录检索历史失败，数据库操作错误：{e}")
         return jsonify({
             'code': -1,
             'message': '记录检索历史失败',
@@ -93,19 +90,19 @@ def get_user_search_history(search_history_id):
         # 将检索历史记录转换为字典
         history_dict = history.to_dict()
 
-        # 打印 search_text
-        print(history_dict['search_text'])
-
         # 解析 search_pictur 字段，获取图片路径列表
         picture_paths = history_dict['search_pictur'].split(',') if history_dict['search_pictur'] else []
 
         # 批量查询数据库，获取所有相关图片信息
         images = Image.query.filter(Image.path.in_([os.path.join(UPLOAD_FOLDER, path) for path in picture_paths])).all()
 
+        # 使用字典按 path 去重，确保每个图片路径只保存一次
+        unique_images = list({image.path: image for image in images}.values())
+
         # 使用线程池并行处理图片读取和编码
         image_list = []
         with ThreadPoolExecutor() as executor:
-            futures = {executor.submit(read_and_encode_image, image.path): image for image in images}
+            futures = {executor.submit(read_and_encode_image, image.path): image for image in unique_images}
             for future in futures:
                 image = futures[future]
                 img_base64 = future.result()
@@ -120,8 +117,6 @@ def get_user_search_history(search_history_id):
                         'image_data': img_base64
                     })
         image_out = [image["image_data"] for image in image_list]
-        # 打印 image_list
-        print(image_list)
 
         return jsonify({
             'code': 0,
@@ -134,7 +129,6 @@ def get_user_search_history(search_history_id):
         })
 
     except Exception as e:
-        print(f"获取检索历史记录失败: {e}")
         return jsonify({
             'code': -1,
             'message': '获取检索历史记录失败',

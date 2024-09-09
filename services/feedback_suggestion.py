@@ -57,7 +57,6 @@ def feedback_submission(username, content):
         })
     except Exception as e:
         db.session.rollback()  # 出现异常时回滚事务
-        print(f"用户反馈数据库插入失败：{e}")
         return jsonify({
             'code': -3,
             "message": "用户反馈失败，请重试",

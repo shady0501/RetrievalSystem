@@ -2,7 +2,6 @@ from datetime import timedelta  # 导入 timedelta 用于设置 token 过期时�
 from flask import jsonify, request  # 导入 jsonify 用于返回 JSON 响应, request 用于获取请求数据
 from flask_jwt_extended import create_access_token, get_jwt_identity  # 导入 JWT 相关方法
 from config import db_init as db
-import hashlib
 from zhipuai import ZhipuAI # 导入ZhipuAI用于用户对话
 from datetime import datetime  # 导入 datetime 用于时间处理
 from models.smart_qa import smartQA # 导入 smartQA 模型
@@ -54,7 +53,7 @@ def user_login(username, password):
 
 
 # 用户注册函数
-def user_register(email, username, nickname, password, permission_level = 1):
+def user_register(email, username, nickname, password):
     """
     用户注册
 
@@ -96,16 +95,53 @@ def user_register(email, username, nickname, password, permission_level = 1):
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"用户注册失败，插入数据库失败：{e}, new_user: {new_user.__dict__}")
         return jsonify({
             'code': -3,
             'message': '用户注册失败，请重试',
             'data': None
         })
 
+# 用户重置密码函数
+def user_reset_password(username, password):
+    """
+    重置用户密码
+
+    参数:
+        username (str): 用户名
+        password (str): 新的用户密码
+
+    返回:
+        JSON 响应: 包含编辑结果的 JSON 对象
+    """
+    # 查询用户是否存在
+    u = User.query.filter_by(username=username, delete_flag=0).first()
+    if not u:
+        return jsonify({
+            'code': -1,
+            'message': '用户不存在',
+            'data': None
+        })
+
+    u.password = password
+
+    try:
+        db.session.commit()  # 提交数据库会话
+        return jsonify({
+            'code': 0,
+            'message': '用户重置密码成功',
+            'data': None
+        })
+    except Exception as e:
+        db.session.rollback()  # 回滚数据库会话
+        return jsonify({
+            'code': -3,
+            'message': '重置密码失败',
+            'data': None
+        })
+
 
 # 用户信息编辑函数
-def user_edit(email, username, password, avatar, nickname, sex, birthday, description):
+def user_edit(email, password, avatar, nickname, sex, birthday, description):
     """
     编辑用户信息
 
@@ -174,7 +210,6 @@ def user_edit(email, username, password, avatar, nickname, sex, birthday, descri
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"更新用户信息失败，数据库操作错误：{e}")
         return jsonify({
             'code': -3,
             'message': '更新失败',
@@ -221,7 +256,6 @@ def user_delete(username, password):
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"删除用户失败，数据库操作错误：{e}")
         return jsonify({
             'code': -3,
             'message': '用户删除失败',
@@ -279,7 +313,7 @@ def set_user_balance(money):
             'data': None
         })
     # 扣除余额
-    u.balance = user_balance - money
+    u.balance = user_balance - float(money)
 
     try:
         # 提交更改到数据库
@@ -348,7 +382,6 @@ def user_charge(username, balance):
 
     # 生成唯一订单号
     out_trade_no = f"order_{u.id}_{int(time.time())}"
-    print(out_trade_no)
 
     return jsonify({
         'code': 0,

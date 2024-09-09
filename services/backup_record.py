@@ -117,7 +117,6 @@ def create_backup():
 
     except subprocess.CalledProcessError as e:
         db.session.rollback()  # 如果备份失败，回滚事务
-        print(f"数据库备份失败: {e}")
         return jsonify({
             'code': -1,
             'message': '数据库备份失败',
@@ -125,7 +124,6 @@ def create_backup():
         })
     except Exception as e:
         db.session.rollback()  # 如果出现其他异常，回滚事务
-        print(f"备份失败: {e}")
         return jsonify({
             'code': -1,
             'message': '备份失败',

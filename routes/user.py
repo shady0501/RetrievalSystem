@@ -1,10 +1,8 @@
-import uuid  # 导入 UUID 模块
-from flask import Blueprint, request, jsonify, redirect, url_for  # 导入 Flask Blueprint、request、jsonify、redirect 和 url_for
-from flask_login import login_required  # 导入 Flask-Login 的 login_required 装饰器
+from flask import Blueprint, request, jsonify # 导入 Flask Blueprint、request、jsonify、redirect 和 url_for
 from flask_jwt_extended import jwt_required  # 导入 JWT 认证所需的装饰器
 from services.user import (
     user_login, user_register, user_edit, user_delete,
-    get_user_balance, set_user_balance, user_charge, user_download_picture, user_dialog
+    get_user_balance, set_user_balance, user_charge, user_download_picture, user_dialog, user_reset_password
 )  # 导入用户相关服务
 from services.feedback_suggestion import feedback_submission, feedback_history  # 导入反馈建议相关服务
 from file_upload import handle_file_upload  # 导入文件上传处理函数
@@ -70,7 +68,7 @@ def register():
         })
 
     # 调用用户注册服务
-    return user_register(email, username, nickname, password, permission_level)
+    return user_register(email, username, nickname, password)
 
 # 用户重置密码路由
 @user.route('/reset_password', methods=['POST'])
@@ -98,7 +96,7 @@ def reset_password():
         })
 
     # 调用用户信息编辑服务
-    return user_edit(None, username, password, None, None, None, None, None)
+    return user_reset_password(username, password)
 
 # 编辑用户信息路由
 @user.route('/edit', methods=['POST'])
@@ -132,7 +130,7 @@ def edit():
     description = data.get('description')
 
     # 调用用户信息编辑服务
-    return user_edit(email, username, password, avatar, nickname, sex, birthday, description)
+    return user_edit(email, password, avatar, nickname, sex, birthday, description)
 
 # 删除用户路由
 @user.route('/delete', methods=['DELETE'])
@@ -275,9 +273,8 @@ def personal_interface_setting():
     else:
         background_image = None
 
-    username = data.get('username')
     theme = data.get('theme')
-    font_style = data.get('font')
+    font_style = data.get('font_style')
 
     # 调用用户信息编辑服务
     return personal_setting(theme, font_style, background_image)

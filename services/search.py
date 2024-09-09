@@ -30,7 +30,6 @@ def read_and_encode_image(image_path):
             img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
             return img_base64
     except Exception as e:
-        print(f"读取图片失败: {e}")
         return None
 
 # 文本检索服务函数
@@ -61,7 +60,6 @@ def text_search(keywords):
             # 其他情况，返回通用错误
             return jsonify({'code': -1, 'message': '未知错误', 'data': None})
     except Exception as e:
-        print(f"调用大模型接口失败: {e}")
         return jsonify({'code': -1,
                         'message': '正在响应，请稍等',
                         'data': None
@@ -136,7 +134,6 @@ def image_search(image_file):
         response_data = response.json()
         content_list = response_data.get('message', [])
     except Exception as e:
-        print(f"调用大模型接口失败: {e}")
         return jsonify({
             'code': -1,
             'message': '调用大模型接口失败',
@@ -170,7 +167,6 @@ def image_search(image_file):
     try:
         db.session.commit()
     except Exception as e:
-        print(f"数据库提交失败: {e}")
         db.session.rollback()
         return jsonify({
             'code': -1,
