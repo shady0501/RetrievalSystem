@@ -5,7 +5,7 @@ from config import db_init as db
 import hashlib
 from zhipuai import ZhipuAI # 导入ZhipuAI用于用户对话
 from datetime import datetime  # 导入 datetime 用于时间处理
-from models.search_history import SearchHistory
+from models.smart_qa import smartQA # 导入 smartQA 模型
 from models.user import User  # 导入 User 模型
 import time  # 导入 time 用于生成订单号
 from file_download import generate_image, send_image  # 导入图片生成和发送函数
@@ -375,14 +375,13 @@ def user_dialog(content):
 
     # 记录检索历史
     current_user_id = get_jwt_identity().get('user_id')
-    new_history = SearchHistory(
+    new_smartQA = smartQA(
         user_id=int(current_user_id),
+        question=content,
+        answer=full_response,
         date=datetime.now(),
-        search_type=2,
-        search_text=content,
-        search_pictur=full_response,
     )
-    db.session.add(new_history)
+    db.session.add(new_smartQA)
     db.session.commit()
 
     return jsonify({
