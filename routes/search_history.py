@@ -71,7 +71,7 @@ def result_record():
     return record_search_result(user_id, history_id_list)
 
 # 获取用户检索历史列表路由
-@search_history.route('/list', methods=['GET'])
+@search_history.route('/list', methods=['POST'])
 @jwt_required()
 def list_history():
     """

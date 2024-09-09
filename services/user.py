@@ -2,7 +2,7 @@ from datetime import timedelta  # 导入 timedelta 用于设置 token 过期时�
 from flask import jsonify, request  # 导入 jsonify 用于返回 JSON 响应, request 用于获取请求数据
 from flask_jwt_extended import create_access_token, get_jwt_identity  # 导入 JWT 相关方法
 from config import db_init as db
-
+import hashlib
 from models.user import User  # 导入 User 模型
 import time  # 导入 time 用于生成订单号
 from file_download import generate_image, send_image  # 导入图片生成和发送函数
@@ -51,7 +51,7 @@ def user_login(username, password):
 
 
 # 用户注册函数
-def user_register(email, username, nickname, password):
+def user_register(email, username, nickname, password, permission_level = 1):
     """
     用户注册
 
@@ -81,7 +81,7 @@ def user_register(email, username, nickname, password):
         })
 
     # 创建新的用户对象
-    new_user = User(email=email, username=username, nickname=nickname, password=password, delete_flag=0)
+    new_user = User(email=email, username=username, nickname=nickname, password=password, delete_flag=0, permission_level=1)
 
     try:
         db.session.add(new_user)  # 添加新用户到数据库会话
@@ -120,7 +120,8 @@ def user_edit(email, username, password, avatar, nickname, sex, birthday, descri
         JSON 响应: 包含编辑结果的 JSON 对象
     """
     # 查询用户是否存在
-    u = User.query.filter_by(username=username, delete_flag=0).first()
+    current_user_id = get_jwt_identity().get('user_id')  # 获取当前用户ID
+    u = User.query.filter_by(id=current_user_id, delete_flag=0).first()
     if not u:
         return jsonify({
             'code': -1,
@@ -346,33 +347,10 @@ def user_charge(username, balance):
     out_trade_no = f"order_{u.id}_{int(time.time())}"
     print(out_trade_no)
 
-    # 创建支付请求
-    try:
-        # 使用 api_alipay_trade_page_pay 方法创建订单
-        order_string = alipay.api_alipay_trade_page_pay(
-            out_trade_no=out_trade_no,  # 订单号
-            total_amount=str(balance),  # 支付金额，必须是字符串格式，精确到小数点后两位
-            subject="账户充值",  # 支付标题
-            return_url="https://example.com/return",  # 支付成功后的回调地址
-            notify_url="https://example.com/alipay/notify"  # 支付完成后的通知回调地址
-        )
-
-        # 构建支付链接
-        alipay_url = 'https://openapi-sandbox.dl.alipaydev.com/gateway.do?' + order_string
-
-    except Exception as e:
-        return jsonify({
-            'code': -4,
-            'message': f'生成支付订单失败：{str(e)}',
-            'data': None
-        })
-
     return jsonify({
         'code': 0,
         'message': '生成支付订单成功',
-        'data': {
-            'alipay_url': alipay_url
-        }
+        'data': None
     })
 
 
