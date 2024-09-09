@@ -2,7 +2,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 
 from models.image import Image
-from models.search_history import SearchHistory, SearchResult
+from models.search_history import SearchHistory
 from flask import jsonify
 from config import db_init as db
 from datetime import datetime
@@ -67,43 +67,6 @@ def record_search_history(user_id, search_type, search_text_list, search_pictur_
             'data': None
         })
 
-def record_search_result(user_id, history_id_list):
-    """
-       记录检索结果
-
-       参数:
-           user_id (int): 用户 ID
-           history_id_list (list): 检索历史 ID 列表
-
-       返回:
-           JSON 响应: 包含记录结果的 JSON 对象
-       """
-    # 将数组转换为 JSON 字符串存储
-    history_id = json.dumps(history_id_list) if history_id_list else '[]'
-
-    # 创建新的检索历史对象
-    new_result = SearchResult(
-        user_id=user_id,
-        history_id=history_id
-    )
-
-    try:
-        db.session.add(new_result)  # 添加检索历史到数据库会话
-        db.session.commit()  # 提交数据库会话
-
-        return jsonify({
-            'code': 0,
-            'message': '检索历史记录成功',
-            'data': new_result.to_dict()
-        })
-    except Exception as e:
-        db.session.rollback()  # 回滚数据库会话
-        print(f"记录检索历史失败，数据库操作错误：{e}")
-        return jsonify({
-            'code': -1,
-            'message': '记录检索历史失败',
-            'data': None
-        })
 
 # 获取用户检索历史列表服务函数
 def get_user_search_history(search_history_id):
@@ -170,62 +133,6 @@ def get_user_search_history(search_history_id):
             }
         })
 
-    except Exception as e:
-        print(f"获取检索历史记录失败: {e}")
-        return jsonify({
-            'code': -1,
-            'message': '获取检索历史记录失败',
-            'data': None
-        })
-
-
-
-# 获取检索结果详情服务函数(长篇)
-def get_search_results(result_id):
-    """
-       获取检索结果详情
-
-       参数:
-           result_id (int): 检索结果 ID
-
-       返回:
-           JSON 响应: 包含检索结果详情的 JSON 对象
-       """
-    try:
-        # 根据 result_id 查询 SearchResult 表以获取对应的 history_id
-        results = SearchResult.query.filter_by(id=result_id).all()
-        if not results:
-            return jsonify({
-                'code': -1,
-                'message': '未找到对应的检索结果',
-                'data': None
-            })
-
-        # 初始化一个空的 history_id 列表
-        history_ids = []
-
-        # 解析每个结果的 history_id 字段（JSON 字符串 -> Python 列表）
-        for result in results:
-            try:
-                # 将 JSON 字符串转换为 Python 列表
-                ids = json.loads(result.history_id)
-                history_ids.extend(ids)
-            except json.JSONDecodeError:
-                print(f"无法解析 history_id: {result.history_id}")
-                continue
-
-        # 将字符串列表转换为整数列表
-        history_ids = list(map(int, history_ids))
-
-        # 根据解析后的 history_id 查询 SearchHistory 表
-        histories = SearchHistory.query.filter(SearchHistory.id.in_(history_ids)).all()
-        history_list = [history.to_dict() for history in histories]
-
-        return jsonify({
-            'code': 0,
-            'message': '获取检索历史记录成功',
-            'data': history_list
-        })
     except Exception as e:
         print(f"获取检索历史记录失败: {e}")
         return jsonify({

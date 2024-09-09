@@ -18,18 +18,3 @@ class SearchHistory(db.Model):
             'search_text': self.search_text,  # 检索文本
             'search_pictur': self.search_pictur  # 检索图片路径
         }
-
-# 定义 SearchResult 模型
-class SearchResult(db.Model):
-    __table__ = db.metadata.tables['searchresult']  # 映射数据库表
-
-    def to_dict(self):
-        """将对象转换为字典格式"""
-        return {
-            'id': self.id,  # 检索结果ID
-            'user_id': self.user_id,  # 用户ID
-            'history_id': self.history_id,  # 检索历史ID
-            'sorting_id': self.sorting_id,  # 排序ID
-            'filter_id': self.filter_id,  # 过滤器ID
-            'result_type': self.result_type  # 结果类型
-        }
