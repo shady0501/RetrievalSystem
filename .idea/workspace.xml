@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="添加调用智谱清言接口用于用户对话，添加项目配置文件requirements.txt">
-      <change afterPath="$PROJECT_DIR$/models/smart_qa.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/backup_record.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/backup_record.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/search.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/search.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +47,12 @@
     &quot;assignee&quot;: &quot;shady0501&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:shady0501/RetrievalSystem.git&quot;,
-    &quot;accountId&quot;: &quot;36992ad0-e09c-4756-9ec1-e2212d4f6009&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/shady0501/RetrievalSystem.git",
+    "accountId": "39f163da-4e19-48fe-b225-5fcfd9a6446c"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
@@ -65,9 +69,11 @@
     "Flask 服务器.RetrievalSystemBackend.executor": "Run",
     "Python.ali.executor": "Run",
     "Python.alipaydemo.executor": "Run",
+    "Python.app.executor": "Run",
     "Python.turn_sql.executor": "Run",
+    "Python.user.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -82,7 +88,7 @@
       <recent name="D:\code\RetrievalSystemBackend\routes" />
     </key>
   </component>
-  <component name="RunManager" selected="Flask 服务器.RetrievalSystemBackend">
+  <component name="RunManager">
     <configuration name="turn_sql" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RetrievalSystemBackend" />
       <option name="ENV_FILES" value="" />
@@ -134,8 +140,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-PY-242.20224.428" />
-        <option value="bundled-python-sdk-80e8e15d2b92-39cff9de6eef-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.20224.428" />
+        <option value="bundled-python-sdk-975db3bf15a3-31b6be0877a2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.18034.82" />
       </set>
     </attachedChunks>
   </component>
