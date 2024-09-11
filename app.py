@@ -20,4 +20,4 @@ CORS(app)
 
 if __name__ == '__main__':
     # 启动 Flask 应用
-    app.run()
+    app.run(host="0.0.0.0", debug=True)

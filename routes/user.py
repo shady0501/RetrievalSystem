@@ -84,6 +84,8 @@ def reset_password():
             'data': None
         })
 
+    print(data)
+
     username = data.get('username')
     password = data.get('password')
 

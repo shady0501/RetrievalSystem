@@ -45,7 +45,7 @@ def text_search(keywords):
     """
     try:
         # 调用大模型接口，获取图片路径或错误信息
-        response = requests.post('http://192.168.229.76:5000/searchfor/image', json={'keywords': keywords})
+        response = requests.post('http://10.203.178.37:8000/searchfor/image', json={'keywords': keywords})
         response_data = response.json()
         code = response_data.get('code')
 
@@ -125,10 +125,12 @@ def image_search(image_file):
     file_path = os.path.join(UPLOAD_FOLDER, filename)
     image_file.save(file_path)  # 保存文件
 
+    print(file_path)
+
     # 调用大模型接口，传递文件路径进行检索
     try:
         response = requests.post(
-            'http://192.168.229.76:5000/searchfor/text',
+            'http://10.203.178.37:8000/searchfor/text',
             json={'keywords': file_path}
         )
         response_data = response.json()
