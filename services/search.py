@@ -152,6 +152,8 @@ def image_search(image_file):
         if content not in found_content:
             text_list.append({'title': '无', 'content': content, 'source': '未知'})
 
+    print(text_list)
+
     # 记录检索历史
     search_text = ', '.join(
         [f"Title: {text['title']}, Content: {text['content']}, Source: {text['source']}" for text in text_list])
@@ -171,9 +173,10 @@ def image_search(image_file):
     except Exception as e:
         db.session.rollback()
         return jsonify({
-            'code': -1,
+            'code': 0,
             'message': 'Database submission failed',
-            'data': None
+            'text_list': text_list,
+            'search_history_id': new_history.id
         })
 
     return jsonify({
