@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="添加调用智谱清言接口用于用户对话，添加项目配置文件requirements.txt">
-      <change afterPath="$PROJECT_DIR$/models/smart_qa.py" afterDir="false" />
+    <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="将return的message全部替换为英文，并删除冗余文件">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/user.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,23 +58,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flask 服务器.RetrievalSystemBackend.executor": "Run",
-    "Python.ali.executor": "Run",
-    "Python.alipaydemo.executor": "Run",
-    "Python.turn_sql.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flask 服务器.RetrievalSystemBackend.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ali.executor&quot;: &quot;Run&quot;,
+    &quot;Python.alipaydemo.executor&quot;: &quot;Run&quot;,
+    &quot;Python.turn_sql.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\code\RetrievalSystemBackend\routes" />
@@ -153,7 +151,9 @@
       <workItem from="1725357573045" duration="28722000" />
       <workItem from="1725434102338" duration="1797000" />
       <workItem from="1725435919314" duration="58393000" />
-      <workItem from="1725719679973" duration="16045000" />
+      <workItem from="1725719679973" duration="45216000" />
+      <workItem from="1726015067427" duration="144000" />
+      <workItem from="1726015218901" duration="4536000" />
     </task>
     <task id="LOCAL-00001" summary="用户增删改功能">
       <option name="closed" value="true" />
@@ -355,7 +355,31 @@
       <option name="project" value="LOCAL" />
       <updated>1725849759201</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="更改用户问答历史与数据库对应关系">
+      <option name="closed" value="true" />
+      <created>1725863607106</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1725863607106</updated>
+    </task>
+    <task id="LOCAL-00027" summary="删除冗余配置导入及控制台输出信息，解决检索历史重复出图问题,解决重置用户密码需要响应头问题">
+      <option name="closed" value="true" />
+      <created>1725873806000</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1725873806000</updated>
+    </task>
+    <task id="LOCAL-00028" summary="将return的message全部替换为英文，并删除冗余文件">
+      <option name="closed" value="true" />
+      <created>1726017668577</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1726017668577</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,12 +430,15 @@
     <MESSAGE value="删除Alipay" />
     <MESSAGE value="联调更新代码" />
     <MESSAGE value="添加调用智谱清言接口用于用户对话，添加项目配置文件requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加调用智谱清言接口用于用户对话，添加项目配置文件requirements.txt" />
+    <MESSAGE value="更改用户问答历史与数据库对应关系" />
+    <MESSAGE value="删除冗余配置导入及控制台输出信息，解决检索历史重复出图问题,解决重置用户密码需要响应头问题" />
+    <MESSAGE value="将return的message全部替换为英文，并删除冗余文件" />
+    <option name="LAST_COMMIT_MESSAGE" value="将return的message全部替换为英文，并删除冗余文件" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$ali.coverage" NAME="ali 覆盖结果" MODIFIED="1725503303211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$turn_sql.coverage" NAME="turn_sql 覆盖结果" MODIFIED="1725593742000" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$alipaydemo.coverage" NAME="alipaydemo 覆盖结果" MODIFIED="1725505334649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1725843807614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1726015222701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
