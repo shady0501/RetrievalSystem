@@ -16,7 +16,7 @@ def search_text():
     if not data:
         return jsonify({
             'code': -1,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -26,7 +26,7 @@ def search_text():
     if not keywords:
         return jsonify({
             'code': -4,
-            'message': '关键词为必填项',
+            'message': 'Keyword is a required field',
             'data': None
         })
 
@@ -43,7 +43,7 @@ def search_image():
     if 'image_file' not in request.files:
         return jsonify({
             'code': -4,
-            'message': '无效输入，未包含图片文件',
+            'message': 'Invalid input, no image file included',
             'data': None
         })
 

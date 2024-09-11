@@ -19,7 +19,7 @@ def edit_user_info():
     if not data:
         return jsonify({
             'code': -3,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -36,7 +36,7 @@ def edit_user_info():
     if not username:
         return jsonify({
             'code': -3,
-            'message': '用户名为必填项',
+            'message': 'Username is a required field',
             'data': None
         })
 
@@ -54,7 +54,7 @@ def delete_user():
     if not data:
         return jsonify({
             'code': -3,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -64,7 +64,7 @@ def delete_user():
     if not username:
         return jsonify({
             'code': -3,
-            'message': '用户名为必填项',
+            'message': 'Username is a required field',
             'data': None
         })
 
@@ -102,7 +102,7 @@ def admin_set_setting():
     if not data:
         return jsonify({
             'code': -3,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 

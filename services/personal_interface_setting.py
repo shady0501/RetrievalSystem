@@ -24,7 +24,7 @@ def personal_setting(theme, font_style, background_image):
     if not u:
         return jsonify({
             'code': -5,
-            "message": "用户不存在",
+            "message": "This user does not exist",
             "data": None
         })
 
@@ -32,7 +32,7 @@ def personal_setting(theme, font_style, background_image):
     if theme is None and font_style is None and background_image is None:
         return jsonify({
             'code': -10,
-            "message": "数据缺失，请重试",
+            "message": "Data missing, please try again",
             "data": None
         })
 
@@ -59,7 +59,7 @@ def personal_setting(theme, font_style, background_image):
         if not updated:
             return jsonify({
                 'code': -100,
-                'message': '未修改用户个性化设置信息',
+                'message': 'User personalization settings not updated',
                 'data': None
             })
 
@@ -67,14 +67,14 @@ def personal_setting(theme, font_style, background_image):
             db.session.commit()  # 提交数据库会话
             return jsonify({
                 'code': 0,
-                'message': '用户个性化设置更新成功',
+                'message': 'User personalization settings updated successfully',
                 'data': s.to_dict()
             })
         except Exception as e:
             db.session.rollback()  # 回滚数据库会话
             return jsonify({
                 'code': -3,
-                'message': '个性化设置更新失败',
+                'message': 'Personalization settings update failed',
                 'data': None
             })
     else:
@@ -91,13 +91,13 @@ def personal_setting(theme, font_style, background_image):
             db.session.commit()  # 提交事务，将数据写入数据库
             return jsonify({
                 'code': 0,
-                "message": "用户个性化设置成功",
+                "message": "User personalization settings successful",
                 "data": settings.to_dict()
             })
         except Exception as e:
             db.session.rollback()  # 出现异常时回滚事务
             return jsonify({
                 'code': -3,
-                "message": "用户个性化设置失败，请重试",
+                "message": "User personalization settings failed, please try again",
                 "data": None
             })

@@ -22,7 +22,7 @@ def get_setting():
         if not setting:
             return jsonify({
                 'code': -1,
-                'message': '该管理员无备份设置',
+                'message': 'This administrator has no backup settings.',
                 'data': None
             })
 
@@ -30,13 +30,13 @@ def get_setting():
         setting_dict = setting.to_dict()
         return jsonify({
             'code': 0,
-            'message': '获取备份设置成功',
+            'message': 'Backup settings retrieved successfully',
             'data': setting_dict,
         })
     except Exception as e:
         return jsonify({
             'code': -1,
-            'message': '获取备份设置失败',
+            'message': 'Failed to retrieve backup settings',
             'data': None
         })
 
@@ -77,7 +77,7 @@ def set_setting(backup_frequency, backup_path):
 
         return jsonify({
             'code': 0,
-            'message': '更改备份设置成功',
+            'message': 'Backup settings changed successfully',
             'data': setting.to_dict()  # 返回更新后的设置
         })
 
@@ -85,6 +85,6 @@ def set_setting(backup_frequency, backup_path):
         db.session.rollback()  # 如果出现错误，回滚事务
         return jsonify({
             'code': -1,
-            'message': '更改备份设置失败',
+            'message': 'Failed to change backup settings',
             'data': None
         })

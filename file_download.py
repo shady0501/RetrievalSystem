@@ -24,7 +24,7 @@ def generate_image(filename, img_format, resolution, base_image_path, temp_image
     try:
         img = Image.open(original_filepath)
     except IOError:
-        raise FileNotFoundError(f"无法找到或打开图片文件: {original_filepath}")
+        raise FileNotFoundError(f"Cannot find or open the image file: {original_filepath}")
 
     # 根据选择的分辨率调整图片大小
     resolution_mapping = {
@@ -35,7 +35,7 @@ def generate_image(filename, img_format, resolution, base_image_path, temp_image
     if resolution in resolution_mapping:
         img = img.resize(resolution_mapping[resolution])
     else:
-        raise ValueError(f"不支持的分辨率: {resolution}")
+        raise ValueError(f"Unsupported resolution: {resolution}")
 
     # 动态生成新的文件名
     new_filename = f'{os.path.splitext(filename)[0]}_{resolution}.{img_format.lower()}'
@@ -45,7 +45,7 @@ def generate_image(filename, img_format, resolution, base_image_path, temp_image
     try:
         img.save(new_filepath, format=img_format.upper())
     except IOError:
-        raise IOError(f"无法保存图片文件: {new_filepath}")
+        raise IOError(f"Unable to save image file: {new_filepath}")
 
     return new_filename, new_filepath
 

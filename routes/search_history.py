@@ -18,7 +18,7 @@ def record():
     if not data:
         return jsonify({
             'code': -2,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -32,7 +32,7 @@ def record():
     if user_id is None or search_type is None:
         return jsonify({
             'code': -2,
-            'message': '用户ID和检索类型为必填项',
+            'message': 'User ID and retrieval type are required fields',
             'data': None
         })
 
@@ -53,7 +53,7 @@ def list_history():
     if search_history_id is None:
         return jsonify({
             'code': -2,
-            'message': '未提供检索历史ID',
+            'message': 'Retrieval history ID not provided.',
             'data': None
         })
 

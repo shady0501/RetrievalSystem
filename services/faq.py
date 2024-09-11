@@ -20,7 +20,7 @@ def get_faq_list(page, per_page):
 
         return jsonify({
             'code': 0,
-            'message': '获取FAQ列表成功',
+            'message': 'FAQ list retrieved successfully',
             'data': faq_list,
             'total': faqs.total,  # 总条目数
             'pages': faqs.pages,  # 总页数
@@ -29,6 +29,6 @@ def get_faq_list(page, per_page):
     except Exception as e:
         return jsonify({
             'code': -1,
-            'message': '获取FAQ列表失败',
+            'message': 'Failed to retrieve FAQ list',
             'data': None
         })

@@ -27,7 +27,7 @@ def user_login(username, password):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
 
@@ -35,7 +35,7 @@ def user_login(username, password):
     if u.password != password:
         return jsonify({
             'code': -2,
-            'message': '密码错误，请重试',
+            'message': 'Incorrect password, please try again',
             'data': None
         })
 
@@ -46,7 +46,7 @@ def user_login(username, password):
 
     return jsonify({
         'code': 0,
-        'message': '登录成功',
+        'message': 'Login successful',
         'access_token': access_token,
         'data': u_dict
     })
@@ -70,7 +70,7 @@ def user_register(email, username, nickname, password):
     if User.query.filter_by(username=username, delete_flag=0).first():
         return jsonify({
             'code': -1,
-            'message': '该用户名已存在',
+            'message': 'This username already exists',
             'data': None
         })
 
@@ -78,7 +78,7 @@ def user_register(email, username, nickname, password):
     if User.query.filter_by(email=email, delete_flag=0).first():
         return jsonify({
             'code': -2,
-            'message': '邮箱已存在',
+            'message': 'Email already exists',
             'data': None
         })
 
@@ -90,14 +90,14 @@ def user_register(email, username, nickname, password):
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '用户注册成功',
+            'message': 'User registration successful',
             'data': new_user.to_dict()
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
         return jsonify({
             'code': -3,
-            'message': '用户注册失败，请重试',
+            'message': 'User registration failed, please try again',
             'data': None
         })
 
@@ -118,7 +118,7 @@ def user_reset_password(username, password):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
 
@@ -128,14 +128,14 @@ def user_reset_password(username, password):
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '用户重置密码成功',
+            'message': 'User password reset successfully',
             'data': None
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
         return jsonify({
             'code': -3,
-            'message': '重置密码失败',
+            'message': 'Password reset failed',
             'data': None
         })
 
@@ -164,7 +164,7 @@ def user_edit(email, password, avatar, nickname, sex, birthday, description):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
 
@@ -197,7 +197,7 @@ def user_edit(email, password, avatar, nickname, sex, birthday, description):
     if not updated:
         return jsonify({
             'code': -100,
-            'message': '未修改用户信息',
+            'message': 'User information not updated',
             'data': None
         })
 
@@ -205,14 +205,14 @@ def user_edit(email, password, avatar, nickname, sex, birthday, description):
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '用户信息更新成功',
+            'message': 'User information updated successfully',
             'data': None
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
         return jsonify({
             'code': -3,
-            'message': '更新失败',
+            'message': 'Update failed',
             'data': None
         })
 
@@ -234,7 +234,7 @@ def user_delete(username, password):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
 
@@ -242,7 +242,7 @@ def user_delete(username, password):
     if u.password != password:
         return jsonify({
             'code': -2,
-            'message': '密码错误，请重试',
+            'message': 'Incorrect password, please try again',
             'data': None
         })
 
@@ -251,14 +251,14 @@ def user_delete(username, password):
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '用户删除成功',
+            'message': 'User deleted successfully',
             'data': None
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
         return jsonify({
             'code': -3,
-            'message': '用户删除失败',
+            'message': 'User deletion failed',
             'data': None
         })
 
@@ -276,12 +276,12 @@ def get_user_balance():
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
     return jsonify({
         'code': 0,
-        'message': '用户余额获取成功',
+        'message': 'User balance retrieved successfully',
         'data': u.to_dict().get('balance')
     })
 
@@ -302,14 +302,14 @@ def set_user_balance(money):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
     user_balance = u.to_dict().get('balance', 0)
     if float(user_balance) < float(money):
         return jsonify({
             'code': -9,
-            'message': '用户余额不足',
+            'message': 'Insufficient user balance',
             'data': None
         })
     # 扣除余额
@@ -320,7 +320,7 @@ def set_user_balance(money):
         db.session.commit()
         return jsonify({
             'code': 0,
-            'message': '余额扣除成功',
+            'message': 'Balance deduction successful',
             'data': u.to_dict().get('balance')
         })
     except Exception as e:
@@ -328,7 +328,7 @@ def set_user_balance(money):
         db.session.rollback()
         return jsonify({
             'code': -10,
-            'message': '数据库更新失败',
+            'message': 'Database update failed',
             'data': str(e)
         })
 
@@ -349,7 +349,7 @@ def user_charge(username, balance):
     if not username or not balance:
         return jsonify({
             'code': -1,
-            'message': '缺少必要的参数',
+            'message': 'Missing required parameters',
             'data': None
         })
 
@@ -359,7 +359,7 @@ def user_charge(username, balance):
     except ValueError:
         return jsonify({
             'code': -1,
-            'message': '无效的余额格式',
+            'message': 'Invalid balance format',
             'data': None
         })
 
@@ -367,7 +367,7 @@ def user_charge(username, balance):
     if balance <= 0:
         return jsonify({
             'code': -2,
-            'message': '充值金额必须大于零',
+            'message': 'Recharge amount must be greater than zero',
             'data': None
         })
 
@@ -376,7 +376,7 @@ def user_charge(username, balance):
     if not u:
         return jsonify({
             'code': -3,
-            'message': '用户不存在',
+            'message': 'User does not exist',
             'data': None
         })
 
@@ -385,7 +385,7 @@ def user_charge(username, balance):
 
     return jsonify({
         'code': 0,
-        'message': '生成支付订单成功',
+        'message': 'Payment order generated successfully',
         'data': None
     })
 
@@ -403,8 +403,6 @@ def user_dialog(content):
     full_response = ""  # 初始化空字符串来拼接所有content
     for chunk in response:
         full_response += chunk.choices[0].delta.content  # 累加拼接content
-
-    print(full_response)
 
     # 记录检索历史
     current_user_id = get_jwt_identity().get('user_id')

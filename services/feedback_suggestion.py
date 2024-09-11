@@ -21,7 +21,7 @@ def feedback_submission(username, content):
     if u is None:
         return jsonify({
             'code': -5,
-            "message": "该用户不存在",
+            "message": "This user does not exist",
             "data": None
         })
 
@@ -35,7 +35,7 @@ def feedback_submission(username, content):
         if feedback is not None and feedback.content.strip() == content.strip():
             return jsonify({
                 'code': -10,
-                "message": "重复提交",
+                "message": "Duplicate submission",
                 "data": None
             })
 
@@ -52,14 +52,14 @@ def feedback_submission(username, content):
         db.session.commit()  # 提交事务，将数据写入数据库
         return jsonify({
             'code': 0,
-            "message": "用户反馈成功",
+            "message": "User feedback submitted successfully",
             "data": feedback.to_dict()
         })
     except Exception as e:
         db.session.rollback()  # 出现异常时回滚事务
         return jsonify({
             'code': -3,
-            "message": "用户反馈失败，请重试",
+            "message": "User feedback failed, please try again",
             "data": None
         })
 
@@ -79,7 +79,7 @@ def feedback_history(username):
     if u is None:
         return jsonify({
             'code': -5,
-            "message": "该用户不存在",
+            "message": "This user does not exist",
             "data": None
         })
 
@@ -90,6 +90,6 @@ def feedback_history(username):
     feedback_data = [feedback.to_dict() for feedback in feedback_list]
     return jsonify({
         'code': 0,
-        "message": "用户反馈历史记录显示成功",
+        "message": "User feedback history displayed successfully",
         "data": feedback_data
     })

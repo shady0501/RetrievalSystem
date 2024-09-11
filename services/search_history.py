@@ -27,7 +27,7 @@ def record_search_history(user_id, search_type, search_text_list, search_pictur_
     if search_type not in [0, 1]:
         return jsonify({
             'code': -2,
-            'message': '检索类型必须为整数：0 表示文本检索，1 表示图片检索',
+            'message': 'Retrieval type must be an integer: 0 for text retrieval, 1 for image retrieval',
             'data': None
         })
 
@@ -53,14 +53,14 @@ def record_search_history(user_id, search_type, search_text_list, search_pictur_
 
         return jsonify({
             'code': 0,
-            'message': '检索历史记录成功',
+            'message': 'Retrieval history recorded successfully',
             'data': new_history.to_dict()
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
         return jsonify({
             'code': -1,
-            'message': '记录检索历史失败',
+            'message': 'Failed to record retrieval history',
             'data': None
         })
 
@@ -83,7 +83,7 @@ def get_user_search_history(search_history_id):
         if not history:
             return jsonify({
                 'code': 404,
-                'message': '检索历史记录未找到',
+                'message': 'Retrieval history not found',
                 'data': None
             })
 
@@ -120,7 +120,7 @@ def get_user_search_history(search_history_id):
 
         return jsonify({
             'code': 0,
-            'message': '获取检索历史记录成功',
+            'message': 'Retrieval history retrieved successfully',
             'data': {
                 'search_text': history_dict['search_text'],
                 'date': history_dict['date'],
@@ -131,6 +131,6 @@ def get_user_search_history(search_history_id):
     except Exception as e:
         return jsonify({
             'code': -1,
-            'message': '获取检索历史记录失败',
+            'message': 'Failed to retrieve retrieval history',
             'data': None
         })

@@ -31,7 +31,7 @@ def get_record(page=1, per_page=100):
 
         return jsonify({
             'code': 0,
-            'message': '获取备份记录成功',
+            'message': 'Backup records retrieved successfully',
             'data': records_list,
             'admin_name': admin_name,
             'total': records.total,  # 总条目数
@@ -39,10 +39,9 @@ def get_record(page=1, per_page=100):
             'current_page': records.page  # 当前页码
         })
     except Exception as e:
-        print(f"获取备份记录失败: {e}")
         return jsonify({
             'code': -1,
-            'message': '获取备份记录失败',
+            'message': 'Failed to retrieve backup records',
             'data': None
         })
 
@@ -65,7 +64,7 @@ def create_backup():
         if not setting or not setting.backup_path:
             return jsonify({
                 'code': -2,
-                'message': '备份路径未设置',
+                'message': 'Backup path not set',
                 'data': None
             })
 
@@ -111,7 +110,7 @@ def create_backup():
 
         return jsonify({
             'code': 0,
-            'message': '数据库备份成功',
+            'message': 'Database backup successful',
             'data': backup_record.to_dict()
         })
 
@@ -119,13 +118,13 @@ def create_backup():
         db.session.rollback()  # 如果备份失败，回滚事务
         return jsonify({
             'code': -1,
-            'message': '数据库备份失败',
+            'message': 'Database backup failed',
             'data': None
         })
     except Exception as e:
         db.session.rollback()  # 如果出现其他异常，回滚事务
         return jsonify({
             'code': -1,
-            'message': '备份失败',
+            'message': 'Backup failed',
             'data': None
         })

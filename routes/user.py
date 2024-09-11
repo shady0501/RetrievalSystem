@@ -21,7 +21,7 @@ def login():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -32,7 +32,7 @@ def login():
     if not username or not password:
         return jsonify({
             'code': -4,
-            'message': '用户名和密码为必填项',
+            'message': 'Username and password are required fields',
             'data': None
         })
 
@@ -49,7 +49,7 @@ def register():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -63,7 +63,7 @@ def register():
     if not email or not username or not password or not nickname:
         return jsonify({
             'code': -4,
-            'message': '所有字段均为必填项',
+            'message': 'All fields are required',
             'data': None
         })
 
@@ -80,7 +80,7 @@ def reset_password():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -91,7 +91,7 @@ def reset_password():
     if not username:
         return jsonify({
             'code': -4,
-            'message': '用户名为必填项',
+            'message': 'Username is a required field',
             'data': None
         })
 
@@ -109,7 +109,7 @@ def edit():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -143,7 +143,7 @@ def delete():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -154,7 +154,7 @@ def delete():
     if not username or not password:
         return jsonify({
             'code': -4,
-            'message': '用户名和密码为必填项',
+            'message': 'Username and password are required fields',
             'data': None
         })
 
@@ -181,7 +181,7 @@ def set_balance():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -189,7 +189,7 @@ def set_balance():
     if money is None or float(money) < 0:
         return jsonify({
             'code': -6,
-            'message': '扣款金额非法',
+            'message': 'Invalid deduction amount',
             'data': None
         })
 
@@ -206,7 +206,7 @@ def charge():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -217,7 +217,7 @@ def charge():
     if not username or not balance:
         return jsonify({
             'code': -4,
-            'message': '用户名和余额为必填项',
+            'message': 'Username and balance are required fields',
             'data': None
         })
 
@@ -235,7 +235,7 @@ def feedback():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -244,7 +244,7 @@ def feedback():
     if not username or not content:
         return jsonify({
             'code': -4,
-            'message': '用户名和内容是必填项',
+            'message': 'Username and content are required fields',
             'data': None
         })
 
@@ -261,7 +261,7 @@ def personal_interface_setting():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -290,7 +290,7 @@ def dialog():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -300,7 +300,7 @@ def dialog():
     if not content:
         return jsonify({
             'code': -4,
-            'message': '搜索文本为必填项',
+            'message': 'Search text is a required field',
             'data': None
         })
 
@@ -318,7 +318,7 @@ def download_picture():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 
@@ -330,7 +330,7 @@ def download_picture():
     if not format or not resolution:
         return jsonify({
             'code': -4,
-            'message': '所有字段均为必填项',
+            'message': 'All fields are required',
             'data': None
         })
 
@@ -348,7 +348,7 @@ def get_feedback_history():
     if not data:
         return jsonify({
             'code': -4,
-            'message': '无效输入',
+            'message': 'Invalid input',
             'data': None
         })
 

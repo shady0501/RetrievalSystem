@@ -26,7 +26,7 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在',
+            'message': 'User does not exist.',
             'data': None
         })
 
@@ -45,7 +45,7 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
         except ValueError:
             return jsonify({
                 'code': -3,
-                'message': '用户生日格式非法',
+                'message': 'Invalid user birthday format',
                 'data': None
             })
 
@@ -75,7 +75,7 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
     if not updated:
         return jsonify({
             'code': -100,
-            'message': '未修改用户信息',
+            'message': 'User information not updated',
             'data': None
         })
 
@@ -83,15 +83,14 @@ def admin_edit_user_info(username, password, email, nickname, birthday, sex, des
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '用户信息更新成功',
+            'message': 'User information updated successfully',
             'data': u.to_dict()
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"管理员更新用户信息失败，数据库操作错误：{e}")
         return jsonify({
             'code': -3,
-            'message': '更新失败',
+            'message': 'Update failed',
             'data': None
         })
 
@@ -112,7 +111,7 @@ def admin_delete_user(username):
     if not u:
         return jsonify({
             'code': -1,
-            'message': '用户不存在或已被删除',
+            'message': 'User does not exist or has been deleted',
             'data': None
         })
 
@@ -123,15 +122,14 @@ def admin_delete_user(username):
         db.session.commit()  # 提交数据库会话
         return jsonify({
             'code': 0,
-            'message': '账号注销成功',
+            'message': 'Account successfully deactivated',
             'data': None
         })
     except Exception as e:
         db.session.rollback()  # 回滚数据库会话
-        print(f"注销用户账号失败，数据库操作错误：{e}")
         return jsonify({
             'code': -2,
-            'message': '账号注销失败',
+            'message': 'Account deactivation failed',
             'data': None
         })
 
@@ -150,7 +148,7 @@ def admin_get_user_info():
     if not users:
         return jsonify({
             'code': 0,
-            'message': '无用户数据',
+            'message': 'No user data',
             'data': ""
         })
 
@@ -159,6 +157,6 @@ def admin_get_user_info():
 
     return jsonify({
         'code': 0,
-        'message': '管理员获取用户数据成功',
+        'message': 'Administrator successfully retrieved user data',
         'data': user_data
     })

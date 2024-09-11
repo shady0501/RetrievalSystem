@@ -54,14 +54,14 @@ def text_search(keywords):
             image_paths = response_data.get('message', [])
         elif code == 400:
             # 请求失败，获取错误信息
-            error_message = response_data.get('error', '未知错误')
+            error_message = response_data.get('error', 'Unknown error')
             return jsonify({'code': 400, 'message': error_message, 'data': None})
         else:
             # 其他情况，返回通用错误
-            return jsonify({'code': -1, 'message': '未知错误', 'data': None})
+            return jsonify({'code': -1, 'message': 'Unknown error', 'data': None})
     except Exception as e:
         return jsonify({'code': -1,
-                        'message': '正在响应，请稍等',
+                        'message': 'Responding, please wait',
                         'data': None
                         })
 
@@ -104,7 +104,7 @@ def text_search(keywords):
     db.session.commit()
 
     return jsonify({'code': 0,
-                    'message': '检索成功',
+                    'message': 'Retrieval successful',
                     'data': image_out,
                     'search_history_id': new_history.id
                     })
@@ -136,7 +136,7 @@ def image_search(image_file):
     except Exception as e:
         return jsonify({
             'code': -1,
-            'message': '调用大模型接口失败',
+            'message': 'Failed to call large model interface',
             'data': None
         })
 
@@ -170,13 +170,13 @@ def image_search(image_file):
         db.session.rollback()
         return jsonify({
             'code': -1,
-            'message': '数据库提交失败',
+            'message': 'Database submission failed',
             'data': None
         })
 
     return jsonify({
         'code': 0,
-        'message': '检索成功',
+        'message': 'Retrieval successful',
         'text_list': text_list,
         'search_history_id': new_history.id
     })

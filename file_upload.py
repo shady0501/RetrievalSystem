@@ -48,7 +48,6 @@ def save_and_process_file(file, upload_folder):
                 img = img.resize((200, 200))  # 将图片调整为 200x200 像素
                 img.save(file_path)  # 保存处理后的图片
         except Exception as e:
-            print(f"图片处理失败：{e}")
             return None
 
         return file_path
@@ -84,7 +83,7 @@ def handle_file_upload(upload_folder, file_field_name):
     if file_field_name not in request.files:
         return jsonify({
             'code': -1,
-            "message": "没有文件被上传",
+            "message": "No file has been uploaded",
             "data": None
         })
 
@@ -95,7 +94,7 @@ def handle_file_upload(upload_folder, file_field_name):
     if file.content_length > MAX_CONTENT_LENGTH:
         return jsonify({
             'code': -2,
-            "message": f"文件太大，最大允许 {MAX_CONTENT_LENGTH / (1024 * 1024)}MB",
+            "message": f"The file is too large. The maximum allowed size is {MAX_CONTENT_LENGTH / (1024 * 1024)} MB.",
             "data": None
         })
 
@@ -104,12 +103,12 @@ def handle_file_upload(upload_folder, file_field_name):
     if file_path:
         return jsonify({
             'code': 0,
-            "message": "图片上传成功",
+            "message": "Image upload successful.",
             "data": {"file_path": file_path}
         })
     else:
         return jsonify({
             'code': -3,
-            "message": "不允许的文件类型或图片处理失败",
+            "message": "The file type is not allowed or the image processing failed",
             "data": None
         })
