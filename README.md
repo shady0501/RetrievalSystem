@@ -81,10 +81,6 @@ app.run(host="0.0.0.0", debug=True)
 
 ## MySQL配置
 
-```bash
-pip install -r requirements.txt
-```
-
 ​- MySQL 需要预先添加在环境变量的 path 中，否则管理员的数据备份操作使用到的随 MySQL 一起安装的 mysqldump 工具无法执行，最终导致无法成功备份数据库
 
 
