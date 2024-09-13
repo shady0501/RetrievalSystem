@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf50423f-e40c-4432-b8fb-8df11505e4cd" name="更改" comment="将return的message全部替换为英文，并删除冗余文件">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/statistic.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RetrievalSystemBackend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/backup_record.py" beforeDir="false" afterPath="$PROJECT_DIR$/services/backup_record.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,29 +61,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Flask 服务器.RetrievalSystemBackend.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ali.executor&quot;: &quot;Run&quot;,
-    &quot;Python.alipaydemo.executor&quot;: &quot;Run&quot;,
-    &quot;Python.turn_sql.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Flask 服务器.RetrievalSystemBackend.executor": "Run",
+    "Python.ali.executor": "Run",
+    "Python.alipaydemo.executor": "Run",
+    "Python.turn_sql.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "aDefault",
+    "settings.editor.selected.configurable": "reference.settings.project.statistic.project.settings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\code\RetrievalSystemBackend\routes" />
     </key>
   </component>
-  <component name="RunManager" selected="Flask 服务器.RetrievalSystemBackend">
+  <component name="RunManager" selected="Python.turn_sql">
     <configuration name="turn_sql" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RetrievalSystemBackend" />
       <option name="ENV_FILES" value="" />
@@ -153,7 +158,8 @@
       <workItem from="1725435919314" duration="58393000" />
       <workItem from="1725719679973" duration="45216000" />
       <workItem from="1726015067427" duration="144000" />
-      <workItem from="1726015218901" duration="4536000" />
+      <workItem from="1726015218901" duration="16914000" />
+      <workItem from="1726128022981" duration="4419000" />
     </task>
     <task id="LOCAL-00001" summary="用户增删改功能">
       <option name="closed" value="true" />
@@ -379,7 +385,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726017668577</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="将return的message全部替换为英文，并删除冗余文件">
+      <option name="closed" value="true" />
+      <created>1726023954373</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1726023954373</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,8 +451,8 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$ali.coverage" NAME="ali 覆盖结果" MODIFIED="1725503303211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$turn_sql.coverage" NAME="turn_sql 覆盖结果" MODIFIED="1725593742000" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$turn_sql.coverage" NAME="turn_sql 覆盖结果" MODIFIED="1726188886964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/RetrievalSystemBackend$alipaydemo.coverage" NAME="alipaydemo 覆盖结果" MODIFIED="1725505334649" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1726015222701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RetrievalSystemBackend$RetrievalSystemBackend.coverage" NAME="RetrievalSystemBackend 覆盖结果" MODIFIED="1726025848740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
