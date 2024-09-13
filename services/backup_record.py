@@ -82,8 +82,8 @@ def create_backup():
         # MySQL 可执行文件的路径和数据库连接信息
         mysqldump_path = 'mysqldump'  # 假设 mysqldump 已经添加到系统路径
         username = 'root'  # MySQL 用户名
-        password = '123456'  # MySQL 密码
-        database_name = 'test'  # 数据库名称
+        password = '110119XPY'  # MySQL 密码
+        database_name = 'retrievalsystem'  # 数据库名称
         host = 'localhost'  # 数据库主机
 
         # mysqldump 导出命令
