@@ -1,4 +1,4 @@
-# SEU暑期实训-跨模态图像文本检索系统-后端仓库
+# SEU暑期实训-跨模态图像文本检索系统-后端仓库（欢迎star）
 
 # 后端代码配置说明：
 
@@ -98,4 +98,4 @@ app.run(host="0.0.0.0", debug=True)
 ## 附录——前端及大模型GitHub仓库
 
 - 前端仓库：https://github.com/lst555ProMax/RetrievalSystem-Front
-- 大模型仓库：https://github.com/GodTheHands/ITR
+- 大模型仓库：https://github.com/GodTheHands/ITR（据了解已被设为private仓库，可以自己搭一个和前后端联动）
